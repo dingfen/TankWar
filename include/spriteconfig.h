@@ -7,9 +7,10 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
-#include <unordered_map>
+#include <map>
 
-using std::unordered_map;
+// 一定要用 std::map 不能用 std::unorded_map 因为 unorded_map 要求 key 类一定可以被 hash
+using std::map;
 
 // 想要的图片类型
 enum class SpriteType {
@@ -58,16 +59,19 @@ class SpriteData {
 public:
     SDL_Rect rect;
 
+    SpriteData();
     SpriteData(int x, int y, int w, int h);
     SpriteData(SDL_Rect);
 };
 
 class SpriteConfig {
-using Map = std::unordered_map<SpriteType, SpriteData>;
+using Map = std::map<SpriteType, SpriteData>;
 public:
-
+    SpriteConfig();
+    const SpriteData& get(SpriteType) const;
 private:
     Map configs_;
+    void init();
 
 };
 

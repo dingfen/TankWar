@@ -1,4 +1,5 @@
 #include "app.h"
+#include "spriteconfig.h"
 
 void App::run() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
@@ -15,10 +16,15 @@ void App::run() {
 
     SDL_Renderer *render = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
     SDL_Rect rect[4];
-    rect[0].x = 0; rect[0].y = 0; rect[0].w = 50; rect[0].h = 50;
+    SpriteConfig sc;
+    rect[0] = sc.get(SpriteType::TANK_A).rect;
+    rect[1].x = 150;
+    rect[1].y = 100;
+    rect[1].h = 32;
+    rect[1].w = 32;
     SDL_Texture *text = SDL_CreateTextureFromSurface(render, loadsuf);
     
-    SDL_RenderCopy(render, text, &rect[0], &rect[0]);
+    SDL_RenderCopy(render, text, &rect[0], &rect[1]);
 
     SDL_RenderPresent(render);
     SDL_UpdateWindowSurface(win);

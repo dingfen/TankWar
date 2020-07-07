@@ -1,5 +1,5 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = src/main.cpp src/app.cpp src/appconfig.cpp
+OBJS = src/main.cpp src/app.cpp src/spriteconfig.cpp src/appconfig.cpp
 
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = main
