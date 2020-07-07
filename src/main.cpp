@@ -1,7 +1,4 @@
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <iostream>
-
+#include "app.h"
 
 using std::cerr;
 using std::endl;
@@ -30,7 +27,7 @@ int main1(int argc, char const *argv[])
 }
 
 
-int main(int argc, char const *argv[])
+int main2(int argc, char const *argv[])
 {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         cerr << "fatal: SDL init video error!" << endl;
@@ -105,3 +102,9 @@ int main3(int argc, char const *argv[])
     return 0;
 }
 
+int main(int argc, char const *argv[])
+{
+    App a;
+    a.run();
+    return 0;
+}

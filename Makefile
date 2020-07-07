@@ -1,11 +1,10 @@
 #OBJS specifies which files to compile as part of the project
-OBJS = src/main.cpp
+OBJS = src/main.cpp src/app.cpp src/appconfig.cpp
 
 #OBJ_NAME specifies the name of our exectuable
 OBJ_NAME = main
 
-C11FLAG = -std=c++11
-
+C11FLAG = -std=c++11 -I include/
 SDLLIB=-lSDL2 -lSDL2_image
 
 #This is the target that compiles our executable
