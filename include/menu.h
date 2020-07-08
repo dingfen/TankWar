@@ -8,12 +8,21 @@
 #define _DF_TANKWAR_MENU_H
 
 #include "appstate.h"
+#include <vector>
+#include <string>
+
+using std::vector;
+using std::string;
 
 class Menu : public AppState {
 public:
     void draw() override;
 
     void update() override;
+
+private:
+    vector<string> items;
+    
 };
 
 

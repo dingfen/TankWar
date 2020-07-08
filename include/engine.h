@@ -7,9 +7,7 @@
 #define _DF_TANKWAR_ENGINE_H
 
 #include <iostream>
-#include "appconfig.h"
-#include "spriteconfig.h"
-#include "exception.h"
+#include "painter.h"
 
 class Engine {
 public:
@@ -21,12 +19,8 @@ public:
         return win_;
     }
 
-    SDL_Renderer *getRenderer() {
-        return render_;
-    }
-
-    SDL_Texture *getTexture() {
-        return text_;
+    Painter *getPainter() {
+        return painter_;
     }
 
     SDL_Rect getSprite(SpriteType type) {
@@ -42,8 +36,7 @@ private:
 
 private:
     SDL_Window *win_;
-    SDL_Renderer *render_;
-    SDL_Texture *text_;
+    Painter *painter_;
     SDL_Surface *loadsuf_;
     SpriteConfig *sc_;
 };
