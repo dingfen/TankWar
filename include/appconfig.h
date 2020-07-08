@@ -5,12 +5,14 @@
 #ifndef _DF_TANKWAR_APPCONFIG_H
 #define _DF_TANKWAR_APPCONFIG_H
 #include <SDL2/SDL_rect.h>
+#include <iostream>
 
 class AppConfig {
   public:
     // games data
 
     // app data
+    static std::string texture_path();
     static SDL_Rect window_rect;
 };
 

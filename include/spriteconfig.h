@@ -67,12 +67,20 @@ public:
 class SpriteConfig {
 using Map = std::map<SpriteType, SpriteData>;
 public:
-    SpriteConfig();
+    static SpriteConfig* getInstance() {
+        static SpriteConfig sc;
+        return &sc;
+    };
+
     const SpriteData& get(SpriteType) const;
 private:
     Map configs_;
     void init();
 
+    SpriteConfig();
+    SpriteConfig(const SpriteConfig&) {};
+    SpriteConfig& operator=(const SpriteConfig &) {};
+    ~SpriteConfig() {};
 };
 
 #endif // _DF_TANKWAR_SPRITECONFIG_H

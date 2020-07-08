@@ -6,7 +6,7 @@ using std::cout;
 
 int main(int argc, char const *argv[])
 {
-    App a;
-    a.run();
+    App* a = App::getInstance();
+    a->run();
     return 0;
 }

@@ -1,7 +1,7 @@
 #include "spriteconfig.h"
 
 SpriteData::SpriteData(int x, int y, int w, int h) 
-    : rect{x, y, h, w} {};
+    : rect{x, y, w, h} {};
 
 SpriteData::SpriteData(SDL_Rect rect)
     : rect(rect) {};
