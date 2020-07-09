@@ -16,10 +16,13 @@ using std::string;
 
 class Menu : public AppState {
 public:
+    // print Menu list on the screen
     void draw() override;
-
+    // update what is new
     void update() override;
 
+    Menu();
+    ~Menu();
 private:
     vector<string> items;
     

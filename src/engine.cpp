@@ -26,3 +26,15 @@ Engine::~Engine() {
         win_ = nullptr;
     }
 }
+
+void Engine::update() {
+    painter_->update();
+}
+
+void Engine::drawRect(const SDL_Rect& srcrect, const SDL_Rect& dstrect) {
+    painter_->drawRect(srcrect, dstrect);
+}
+
+void Engine::writeText(int x, int y, const std::string & text, SDL_Color color) {
+    painter_->writeText(x, y, text, color);
+}

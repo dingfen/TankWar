@@ -11,7 +11,7 @@
 
 class Engine {
 public:
-    static Engine* getInstance() throw() {
+    inline static Engine* getInstance() throw() {
         static Engine e;
         return &e;
     }
@@ -27,6 +27,11 @@ public:
         return sc_->get(type).rect;
     }
 
+    void update();
+
+    // call Painter drawRect writeText
+    void drawRect(const SDL_Rect& srcrect, const SDL_Rect& dstrect);
+    void writeText(int x, int y, const std::string & text, SDL_Color color);
 private:
     Engine() throw();
     Engine(const Engine&);

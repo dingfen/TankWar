@@ -30,7 +30,7 @@ void App::run() {
         app_state_->draw();
         app_state_->update();
 
-        SDL_Delay(2000);
+        SDL_Delay(5000);
     } catch(const std::exception &e) {
         cerr << e.what() << endl;
         SDL_ClearError();

@@ -3,6 +3,7 @@
  * Throw exception in try catch statement
  */
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <exception>
 
 using std::exception;
@@ -14,6 +15,13 @@ class SDLErrorException : public exception {
 public:   
     virtual const char* what() const throw() {
         return SDL_GetError();
+    }
+};
+
+class TTFErrorException : public exception {
+public:
+    virtual const char *what() const throw() {
+        return TTF_GetError();
     }
 };
 

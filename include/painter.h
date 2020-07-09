@@ -15,16 +15,24 @@
 
 class Painter {
 public:
-    Painter(SDL_Window *, SDL_Surface *);
+    Painter(SDL_Window *, SDL_Surface *) throw();
     ~Painter();
+
+    // update the screen with rendering performed
+    void update();
 
     // draw a Rectangle on render
     // src position in texture png
     // dst position on window
     void drawRect(const SDL_Rect& srcrect, const SDL_Rect& dstrect);
+
+    // write text using color
+    void writeText(int x, int y, const std::string&, const SDL_Color&);
 private:
     SDL_Renderer *render_;
     SDL_Texture *text_;
+    TTF_Font *font_;
+
 };
 
 

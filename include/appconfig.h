@@ -12,8 +12,10 @@ class AppConfig {
     // games data
 
     // app data
+    static std::string font_path();
     static std::string texture_path();
     static SDL_Rect window_rect;
+    static SDL_Rect logo_rect;
 };
 
 #endif // _DF_TANKWAR_APPCONFIG_H
