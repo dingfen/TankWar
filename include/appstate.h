@@ -18,6 +18,8 @@ public:
     void virtual draw() = 0;
 
     void virtual update() = 0;
+
+    void virtual event(SDL_Event*) = 0;
 };
 
 

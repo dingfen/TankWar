@@ -1,17 +1,21 @@
 #include "engine.h"
 
-Engine::Engine() throw()
+Engine::Engine()
     : win_(nullptr), loadsuf_(nullptr), painter_(nullptr), sc_(nullptr) {
-    win_ = SDL_CreateWindow("df-tankwar", 
-        SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-        AppConfig::window_rect.w, AppConfig::window_rect.h, SDL_WINDOW_SHOWN);
-    if (!win_)
-        throw SDLErrorException();
-    loadsuf_ = IMG_Load(AppConfig::texture_path().c_str());
-    if (!loadsuf_)
-        throw SDLErrorException();
-    sc_ = SpriteConfig::getInstance();
-    painter_ = new Painter(win_, loadsuf_);
+    try {
+        win_ = SDL_CreateWindow("df-tankwar", 
+            SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
+            AppConfig::window_rect.w, AppConfig::window_rect.h, SDL_WINDOW_SHOWN);
+        if (!win_)
+            throw SDLErrorException();
+        loadsuf_ = IMG_Load(AppConfig::texture_path().c_str());
+        if (!loadsuf_)
+            throw SDLErrorException();
+        sc_ = SpriteConfig::getInstance();
+        painter_ = new Painter(win_, loadsuf_);
+    } catch(const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 Engine::~Engine() {
@@ -31,10 +35,27 @@ void Engine::update() {
     painter_->update();
 }
 
+void Engine::clear() {
+    try {
+        painter_->clear();
+    } catch(const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+    }
+    
+}
+
 void Engine::drawRect(const SDL_Rect& srcrect, const SDL_Rect& dstrect) {
-    painter_->drawRect(srcrect, dstrect);
+    try {
+        painter_->drawRect(srcrect, dstrect);
+    } catch(const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }
 
 void Engine::writeText(int x, int y, const std::string & text, SDL_Color color) {
-    painter_->writeText(x, y, text, color);
+    try {
+        painter_->writeText(x, y, text, color);
+    } catch(const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }

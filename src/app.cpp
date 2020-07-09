@@ -30,7 +30,15 @@ void App::run() {
         app_state_->draw();
         app_state_->update();
 
-        SDL_Delay(5000);
+        is_running_ = true;
+        while(is_running_) {
+            this->event();
+            app_state_->draw();
+            app_state_->update();
+
+            // avoid testing too fast
+            SDL_Delay(15);
+        }
     } catch(const std::exception &e) {
         cerr << e.what() << endl;
         SDL_ClearError();
@@ -43,5 +51,7 @@ void App::event() {
         if (e.type == SDL_QUIT) {
             is_running_ = false;
         }
+
+        app_state_->event(&e);
     }
 }

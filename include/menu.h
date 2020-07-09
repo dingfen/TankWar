@@ -20,12 +20,14 @@ public:
     void draw() override;
     // update what is new
     void update() override;
-
+    // event process
+    void event(SDL_Event*) override;
+    
     Menu();
     ~Menu();
 private:
-    vector<string> items;
-    
+    vector<string> items_;
+    int pos_y_;
 };
 
 
