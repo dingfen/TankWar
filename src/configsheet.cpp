@@ -7,7 +7,7 @@ void ConfigSheet::draw() {
     e->clear();
     for (int i = 0; i < lines_.size(); i++) {
         e->writeText(SDL_Point{30, 60+40*i}, lines_[i],
-            SDL_Color{0xff, 0xff, 0xff, 0}, 10);
+            SDL_Color{0xff, 0xff, 0xff, 0}, 14, 1);
     }
     e->update();
 }
@@ -43,7 +43,5 @@ ConfigSheet::ConfigSheet()
     : is_finished_(false),  
     lines_({"Author: Ding Feng", 
     "Date: 2020 July", 
-    "Basic Info: df-tankwar is a tiny game",
-    "developed by SDL 2.0,"
-    "the resources (image, map, font etc.)",
-    "are from Internet."}) {}
+    "Basic Info: df-tankwar is a tiny game developed by SDL 2.0,",
+    "the resources (image, map, font etc.) are from Internet."}) {}

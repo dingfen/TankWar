@@ -13,7 +13,8 @@ std::string AppConfig::texture_path() {
     return texture;
 }
 
-std::string AppConfig::font_path() {
-    static std::string font("resources/font/prstartk.ttf");
-    return font;
+std::string AppConfig::font_path(int index) {
+    static std::vector<std::string> font{"resources/font/prstartk.ttf",
+        "resources/font/arialbd.ttf", "resources/font/tank_font.ttk"};
+    return font.at(index);
 }

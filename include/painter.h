@@ -29,7 +29,8 @@ public:
     void draw(const SDL_Rect& srcrect, const SDL_Rect& dstrect) throw();
 
     // write text using color
-    void writeText(SDL_Point, const std::string&, const SDL_Color&, int) throw();
+    void writeText(SDL_Point, const std::string&, 
+        const SDL_Color&, int, int) throw();
 
     // draw a Rect
     // whether fill or draw depends on the is_fill
@@ -40,6 +41,7 @@ private:
     SDL_Texture *ttf_text_;
     TTF_Font *font_;
     int font_size_;
+    int font_family_;
 };
 
 

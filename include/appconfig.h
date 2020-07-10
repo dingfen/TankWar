@@ -7,6 +7,8 @@
 
 #include <SDL2/SDL.h>
 #include <iostream>
+#include <vector>
+#include <string>
 
 class AppConfig {
   public:
@@ -14,7 +16,7 @@ class AppConfig {
     static int player_nums;
 
     // app data
-    static std::string font_path();
+    static std::string font_path(int);
     static std::string texture_path();
     static SDL_Rect window_rect;
     static SDL_Rect logo_rect;
