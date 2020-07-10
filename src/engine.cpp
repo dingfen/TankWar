@@ -44,9 +44,9 @@ void Engine::clear() {
     
 }
 
-void Engine::drawRect(const SDL_Rect& srcrect, const SDL_Rect& dstrect) {
+void Engine::draw(const SDL_Rect& srcrect, const SDL_Rect& dstrect) {
     try {
-        painter_->drawRect(srcrect, dstrect);
+        painter_->draw(srcrect, dstrect);
     } catch(const std::exception &e) {
         std::cerr << e.what() << std::endl;
     }

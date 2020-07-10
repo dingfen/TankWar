@@ -29,10 +29,11 @@ public:
 
     void update();
 
-    // call Painter drawRect writeText clear
+    // call Painter draw writeText clear
     void clear();
-    void drawRect(const SDL_Rect& srcrect, const SDL_Rect& dstrect);
-    void writeText(SDL_Point, const std::string & text, SDL_Color color);
+    void draw(const SDL_Rect& srcrect, const SDL_Rect& dstrect);
+    void writeText(SDL_Point, const std::string & text, 
+        SDL_Color color = {0xff, 0xff, 0xff, 0});
 private:
     Engine();
     Engine(const Engine&);

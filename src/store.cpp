@@ -14,11 +14,10 @@ void Store::draw() {
     Engine *e = Engine::getInstance();
     e->clear();
     // load title
-    SDL_Rect rect = e->getSprite(SpriteType::BONUS_TANK);
-    SDL_Rect dstrect = middle();
-    e->drawRect(rect, dstrect);
+    e->writeText(SDL_Point{-1, 30}, "Stage 1");
+
     // load line
-    
+    e->drawRect();
     // load players' money
     e->update();
 }

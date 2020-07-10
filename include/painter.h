@@ -23,10 +23,10 @@ public:
 
     // clear the screen
     void clear() throw();
-    // draw a Rectangle on render
+    // draw a object on render
     // src position in texture png
     // dst position on window
-    void drawRect(const SDL_Rect& srcrect, const SDL_Rect& dstrect) throw();
+    void draw(const SDL_Rect& srcrect, const SDL_Rect& dstrect) throw();
 
     // write text using color
     void writeText(SDL_Point, const std::string&, const SDL_Color&) throw();

@@ -23,6 +23,10 @@ Painter::~Painter() {
         SDL_DestroyRenderer(render_);
         render_ = nullptr;
     }
+    if (font_) {
+        TTF_CloseFont(font_);
+        font_ = nullptr;
+    }
 }
 
 void Painter::update() {
@@ -37,7 +41,7 @@ void Painter::clear() throw() {
         throw SDLErrorException();
 }
 
-void Painter::drawRect(const SDL_Rect& srcrect, const SDL_Rect& dstrect) throw() {
+void Painter::draw(const SDL_Rect& srcrect, const SDL_Rect& dstrect) throw() {
     if (SDL_RenderCopy(render_, text_, &srcrect, &dstrect) == -1)
         throw SDLErrorException();
 }
@@ -52,10 +56,16 @@ void Painter::writeText(SDL_Point point,
         throw SDLErrorException();
     
     SDL_Rect rect;
-    rect.x = point.x;
-    rect.y = point.y;
     rect.w = suf->w;
     rect.h = suf->h;
+    // make it easy to be put in the middle
+    if (point.x < 0)
+        rect.x = (AppConfig::window_rect.w - suf->w) / 2;
+    else rect.x = point.x;
+    if (point.y < 0)
+        rect.y = (AppConfig::window_rect.h - suf->h) / 2;
+    else rect.y = point.y;
+    
     if (SDL_RenderCopy(render_, ttf_text_, NULL, &rect) == -1)
         throw SDLErrorException();
 }

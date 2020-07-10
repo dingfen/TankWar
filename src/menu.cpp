@@ -17,7 +17,7 @@ void Menu::draw() {
     // load Logo
     SDL_Rect rect = e->getSprite(SpriteType::TANKS_LOGO);
     SDL_Rect dstrect = AppConfig::logo_rect;
-    e->drawRect(rect, dstrect);
+    e->draw(rect, dstrect);
 
     // load items
     for (int i = 0; i < items_.size(); i++)
@@ -25,7 +25,7 @@ void Menu::draw() {
     // load small pointer
     rect = e->getSprite(SpriteType::TANK_A);
     dstrect.x = 140; dstrect.y = pos_y_; dstrect.h = dstrect.w = 32;
-    e->drawRect(rect, dstrect);
+    e->draw(rect, dstrect);
     e->update();
 }
 
