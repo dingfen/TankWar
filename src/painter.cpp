@@ -7,7 +7,8 @@ Painter::Painter(SDL_Window *win, SDL_Surface *suf) throw(){
     text_ = SDL_CreateTextureFromSurface(render_, suf);
     if (!text_)
         throw SDLErrorException();
-    font_ = TTF_OpenFont(AppConfig::font_path().c_str(), 14);
+    font_size_ = 14;
+    font_ = TTF_OpenFont(AppConfig::font_path().c_str(), font_size_);
     if (!font_)
         throw TTFErrorException();
     ttf_text_ = nullptr;
@@ -46,8 +47,30 @@ void Painter::draw(const SDL_Rect& srcrect, const SDL_Rect& dstrect) throw() {
         throw SDLErrorException();
 }
 
+void Painter::drawRect(const SDL_Rect& srcrect, 
+    SDL_Color color, bool is_fill) throw() {
+    if (SDL_SetRenderDrawColor(render_, color.r, color.g, color.b, color.a) == -1)
+        throw SDLErrorException();
+
+    if (is_fill) {
+        if (SDL_RenderFillRect(render_, &srcrect) == -1)
+            throw SDLErrorException();
+    } else {
+        if (SDL_RenderDrawRect(render_, &srcrect) == -1)
+            throw SDLErrorException();
+    }
+}
+
 void Painter::writeText(SDL_Point point, 
-    const std::string & text, const SDL_Color& color) throw() {
+    const std::string & text, const SDL_Color& color, int fontsize) throw() {
+    // exsiting TTF fontsize != required fontsize
+    if (font_size_ != fontsize) {
+        if (font_) {
+            TTF_CloseFont(font_);
+            font_ = nullptr;
+        }
+        font_ = TTF_OpenFont(AppConfig::font_path().c_str(), fontsize);
+    }
     SDL_Surface *suf = TTF_RenderText_Solid(font_, text.c_str(), color);
     if (!suf)
         throw TTFErrorException();
@@ -69,3 +92,9 @@ void Painter::writeText(SDL_Point point,
     if (SDL_RenderCopy(render_, ttf_text_, NULL, &rect) == -1)
         throw SDLErrorException();
 }
+
+// void Painter::drawLine(const SDL_Point& start, const SDL_Point& end,
+//     SDL_Color color) throw() {
+//     SDL_SetRenderDrawColor();
+//     SDL_RenderDrawLine()
+// }

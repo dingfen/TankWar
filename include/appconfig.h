@@ -11,6 +11,7 @@
 class AppConfig {
   public:
     // games data
+    static int player_nums;
 
     // app data
     static std::string font_path();

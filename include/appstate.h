@@ -7,6 +7,7 @@
 #define _DF_TANKWAR_APPSTATE_H
 
 #include <iostream>
+#include <memory>
 #include "appconfig.h"
 #include "spriteconfig.h"
 #include "exception.h"
@@ -22,6 +23,8 @@ public:
     void virtual event(SDL_Event*) = 0;
 
     bool virtual finish() = 0;
+
+    void virtual nextstate(std::unique_ptr<AppState>&) = 0;
 };
 
 

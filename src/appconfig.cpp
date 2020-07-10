@@ -4,7 +4,7 @@
  */ 
 #include "appconfig.h"
 
-
+int AppConfig::player_nums = 1;
 SDL_Rect AppConfig::window_rect = {0, 0, 29*16, 26*16};
 SDL_Rect AppConfig::logo_rect = {20, 20, 406, 72};
 

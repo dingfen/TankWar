@@ -35,11 +35,12 @@ void App::run() {
         while(is_running_) {
             this->event();
             if (app_state_->finish()) {
-                app_state_.reset(new Store());
+                app_state_->nextstate(app_state_);
             } else {
                 app_state_->draw();
                 app_state_->update();
             }
+            if (!app_state_) break;
             // avoid testing too fast
             SDL_Delay(15);
         }

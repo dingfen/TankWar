@@ -29,13 +29,17 @@ public:
     void draw(const SDL_Rect& srcrect, const SDL_Rect& dstrect) throw();
 
     // write text using color
-    void writeText(SDL_Point, const std::string&, const SDL_Color&) throw();
+    void writeText(SDL_Point, const std::string&, const SDL_Color&, int) throw();
+
+    // draw a Rect
+    // whether fill or draw depends on the is_fill
+    void drawRect(const SDL_Rect& rect, SDL_Color color, bool is_fill) throw();
 private:
     SDL_Renderer *render_;
     SDL_Texture *text_;
     SDL_Texture *ttf_text_;
     TTF_Font *font_;
-
+    int font_size_;
 };
 
 
