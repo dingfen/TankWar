@@ -22,12 +22,14 @@ public:
     void update() override;
     // event process
     void event(SDL_Event*) override;
-    
+    // judge if stage is finished
+    bool finish() override;
     Menu();
     ~Menu();
 private:
-    vector<string> items_;
-    int pos_y_;
+    vector<string> items_;      // items text
+    int pos_y_;                 // pointer's position
+    bool is_finished_;           // whether to go next state
 };
 
 

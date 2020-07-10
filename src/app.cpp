@@ -1,5 +1,6 @@
 #include "app.h"
 #include "menu.h"
+#include "store.h"
 #include "engine.h"
 
 App::App()
@@ -33,9 +34,12 @@ void App::run() {
         is_running_ = true;
         while(is_running_) {
             this->event();
-            app_state_->draw();
-            app_state_->update();
-
+            if (app_state_->finish()) {
+                app_state_.reset(new Store());
+            } else {
+                app_state_->draw();
+                app_state_->update();
+            }
             // avoid testing too fast
             SDL_Delay(15);
         }

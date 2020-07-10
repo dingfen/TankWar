@@ -20,6 +20,8 @@ public:
     void virtual update() = 0;
 
     void virtual event(SDL_Event*) = 0;
+
+    bool virtual finish() = 0;
 };
 
 

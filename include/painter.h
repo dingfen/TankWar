@@ -29,7 +29,7 @@ public:
     void drawRect(const SDL_Rect& srcrect, const SDL_Rect& dstrect) throw();
 
     // write text using color
-    void writeText(int x, int y, const std::string&, const SDL_Color&) throw();
+    void writeText(SDL_Point, const std::string&, const SDL_Color&) throw();
 private:
     SDL_Renderer *render_;
     SDL_Texture *text_;

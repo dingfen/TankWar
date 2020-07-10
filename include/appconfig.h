@@ -4,7 +4,8 @@
  */
 #ifndef _DF_TANKWAR_APPCONFIG_H
 #define _DF_TANKWAR_APPCONFIG_H
-#include <SDL2/SDL_rect.h>
+
+#include <SDL2/SDL.h>
 #include <iostream>
 
 class AppConfig {

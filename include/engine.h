@@ -32,7 +32,7 @@ public:
     // call Painter drawRect writeText clear
     void clear();
     void drawRect(const SDL_Rect& srcrect, const SDL_Rect& dstrect);
-    void writeText(int x, int y, const std::string & text, SDL_Color color);
+    void writeText(SDL_Point, const std::string & text, SDL_Color color);
 private:
     Engine();
     Engine(const Engine&);

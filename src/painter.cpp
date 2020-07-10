@@ -42,7 +42,7 @@ void Painter::drawRect(const SDL_Rect& srcrect, const SDL_Rect& dstrect) throw()
         throw SDLErrorException();
 }
 
-void Painter::writeText(int x, int y,
+void Painter::writeText(SDL_Point point, 
     const std::string & text, const SDL_Color& color) throw() {
     SDL_Surface *suf = TTF_RenderText_Solid(font_, text.c_str(), color);
     if (!suf)
@@ -52,8 +52,8 @@ void Painter::writeText(int x, int y,
         throw SDLErrorException();
     
     SDL_Rect rect;
-    rect.x = x;
-    rect.y = y;
+    rect.x = point.x;
+    rect.y = point.y;
     rect.w = suf->w;
     rect.h = suf->h;
     if (SDL_RenderCopy(render_, ttf_text_, NULL, &rect) == -1)
