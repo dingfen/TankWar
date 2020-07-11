@@ -28,11 +28,14 @@ public:
     void nextstate(std::unique_ptr<AppState>&) override;
     Store();
     ~Store();
+
+    static const int line_spacing_ = 32;
 private:
     vector<string> goods_;
     bool is_finished_;
 
     void show_money(int i, SDL_Rect icon);
+    void show_goods(SDL_Rect);
 };
 
 #endif // _DF_TANKWAR_STORE_H

@@ -20,6 +20,10 @@ void Store::show_money(int i, SDL_Rect icon) {
     }
     icon.y += i * 40;
     e->draw(player, icon);
+    SDL_Point p;
+    p.x = icon.x + 150;
+    p.y = icon.y + 10;
+    e->writeText(p, "1000 $ ", SDL_Color{0xff, 200, 0, 0});
 }
 
 void Store::draw() {
@@ -36,6 +40,14 @@ void Store::draw() {
     for(int i = 0; i < AppConfig::player_nums; i++)
         show_money(i, SDL_Rect{120, 80, 32, 32});
 
+    // load goods_
+    for(int i = 0; i < goods_.size(); i++)
+        e->writeText(SDL_Point{60, 170+i*line_spacing_}, goods_[i]);
+    // write tips
+    e->writeText(SDL_Point{30, 400}, "\'Space\' to Buy", 
+        SDL_Color{0xff, 0xff, 0, 0}, 12);
+    e->writeText(SDL_Point{300, 400}, "\'Enter\' -->", 
+        SDL_Color{0xff, 0xff, 0, 0}, 12);
     e->update();
 }
 
@@ -52,7 +64,10 @@ void Store::event(SDL_Event *e) {
 }
 
 Store::Store()
-    : goods_({"More Life * 1", "Deep Damage"}),
+    : goods_({"More Life * 1",
+    "Deep Damage * 1",
+    "More Shield time * 1",
+    "Less Enemy * 1"}),
     is_finished_(false) {
 
 }
@@ -62,5 +77,5 @@ Store::~Store() {
 }
 
 void Store::nextstate(std::unique_ptr<AppState>& app_state) {
-    
+
 }
