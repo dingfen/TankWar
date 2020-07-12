@@ -17,7 +17,7 @@ class ConfigSheet : public AppState {
 public:
     void draw() override;
 
-    void update() override;
+    void update(int) override;
 
     void event(SDL_Event *) override;
 

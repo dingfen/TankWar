@@ -1,18 +1,43 @@
 #include "game.h"
+#include "stone.h"
+#include "brick.h"
 #include <fstream>
 
 Game::Game(int stage)
-    : stage_(stage), is_finished_(false) {
+    : stage_(stage), is_finished_(false),
+    prepare_time_(AppConfig::prepare_time) {
 
+}
+
+Game::~Game() {
+    
 }
 
 
 void Game::draw() {
+    Engine *e = Engine::getInstance();
+    e->clear();
+    // load the teaser
+    if (prepare_time_ > 0) {
+        std::string text = "STAGE " + std::to_string(stage_);
+        e->writeText(SDL_Point{-1, -1}, text, SDL_Color{0xff, 0xff, 0, 0}, 20);
+        e->update();
+        return ;
+    }
+    // load Game map and Draw it
+    loadmap();
 
+
+    e->update();
 }
 
-void Game::update() {
-
+void Game::update(int dt) {
+    if (prepare_time_ > 0) {
+        prepare_time_ -= dt;
+        SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
+    } else {
+        SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
+    }
 }
 
 void Game::event(SDL_Event *e) {
@@ -36,15 +61,18 @@ void Game::loadmap() {
         return;
     }
     std::string line;
+    int i, j = 0;
     while(!fin.eof()) {
         std::getline(fin, line);
-        std::vector<unique_ptr<Object>> row;
-        for(int i = 0; i < line.size(); i++) {
-            unique_ptr<Object> obj;
+        vector<shared_ptr<Object>> row;
+        for(i = 0; i < line.size(); i++) {
+            shared_ptr<Object> obj = nullptr;
             switch(line.at(i)) {
             case '#' : 
+                obj = shared_ptr<Object>(new Brick(i * AppConfig::tile_w, j * AppConfig::tile_h));
                 break;
-            case '@' : 
+            case '@' :
+                obj = shared_ptr<Object>(new Stone(i * AppConfig::tile_w, j * AppConfig::tile_h));
                 break;
             case '%' : 
                 break;
@@ -57,5 +85,12 @@ void Game::loadmap() {
             row.push_back(obj);
         }
         this->map_.push_back(row);
+        j++;
     }
+
+    for(i = 0; i < map_.size(); i++)
+        for(j = 0; j < map_[i].size(); j++) {
+            if (map_[i][j])
+                map_[i][j]->draw();
+        }
 }

@@ -12,14 +12,15 @@
 #include <iostream>
 
 using std::vector;
-using std::unique_ptr;
+using std::shared_ptr;
+using std::make_shared;
 
 class Game : public AppState {
 public:
     // print Game playground on the screen
     void draw() override;
     // update what is new
-    void update() override;
+    void update(int) override;
     // event process
     void event(SDL_Event*) override;
     // judge if stage is finished
@@ -34,8 +35,9 @@ private:
     // game level
     int stage_;
     // game map
-    vector<vector<unique_ptr<Object>>> map_;
-    // 
+    vector<vector<shared_ptr<Object>>> map_;
+    // prepare time at the beginning
+    int prepare_time_;
 
     void loadmap();
 };

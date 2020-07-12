@@ -19,7 +19,7 @@ public:
     // print Store goods on the screen
     void draw() override;
     // update what is new
-    void update() override;
+    void update(int) override;
     // event process
     void event(SDL_Event*) override;
     // judge if stage is finished

@@ -15,11 +15,16 @@ class AppConfig {
     // games data
     static int player_nums;
     static int current_level;
+    static const int prepare_time = 3000;
+    static const int tile_h = 16;
+    static const int tile_w = 16;
+    
+    // file data
     static std::string level_file_path(int);
-
-    // app data
     static std::string font_path(int);
     static std::string texture_path();
+
+    // app data
     static SDL_Rect window_rect;
     static SDL_Rect logo_rect;
 };

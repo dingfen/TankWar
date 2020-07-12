@@ -12,7 +12,7 @@ void ConfigSheet::draw() {
     e->update();
 }
 
-void ConfigSheet::update() {
+void ConfigSheet::update(int dt) {
     SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());    
 }
 

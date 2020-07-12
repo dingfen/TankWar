@@ -52,7 +52,7 @@ void Store::draw() {
     e->update();
 }
 
-void Store::update() {
+void Store::update(int dt) {
     SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
 }
 

@@ -19,7 +19,7 @@ public:
     virtual void draw();
 
     // update
-    virtual void update();
+    virtual void update(int);
 private:
     double x_;
     double y_;

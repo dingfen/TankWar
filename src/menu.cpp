@@ -32,7 +32,7 @@ void Menu::draw() {
     e->update();
 }
 
-void Menu::update() {
+void Menu::update(int dt) {
     SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
 }
 

@@ -29,20 +29,30 @@ void App::run() {
         // load Menu
         app_state_ = unique_ptr<AppState>(new Menu());
         app_state_->draw();
-        app_state_->update();
+        app_state_->update(0);
 
         is_running_ = true;
+        Uint32 time1, time2, delay = 15, duration;
+        time1 = SDL_GetTicks();
         while(is_running_) {
+            // processing one loop duration
+            time2 = SDL_GetTicks();
+            duration = time2 - time1;
+            time1 = time2;
+
             this->event();
             if (app_state_->finish()) {
                 app_state_->nextstate(app_state_);
             } else {
                 app_state_->draw();
-                app_state_->update();
+                app_state_->update(duration);
             }
             if (!app_state_) break;
+            
             // avoid testing too fast
-            SDL_Delay(15);
+            // if run too slow, should increase duration
+            SDL_Delay(delay);
+
         }
     } catch(const std::exception &e) {
         cerr << e.what() << endl;

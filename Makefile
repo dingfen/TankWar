@@ -11,5 +11,8 @@ SDLLIB=-lSDL2 -lSDL2_image -lSDL2_ttf
 all : $(OBJS)
 	g++ $(C11FLAG) $(OBJS) -w $(SDLLIB) -o $(OBJ_NAME)
 
+debug: $(OBJS)
+	g++ $(C11FLAG) $(OBJS) -w -g $(SDLLIB) -o $(OBJ_NAME)
+
 clean:
 	rm $(OBJ_NAME)
