@@ -14,6 +14,8 @@ class AppConfig {
   public:
     // games data
     static int player_nums;
+    static int current_level;
+    static std::string level_file_path(int);
 
     // app data
     static std::string font_path(int);

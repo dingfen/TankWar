@@ -8,6 +8,11 @@
 #define _DF_TANKWAR_GAME_H
 
 #include "appstate.h"
+#include "object.h"
+#include <iostream>
+
+using std::vector;
+using std::unique_ptr;
 
 class Game : public AppState {
 public:
@@ -22,10 +27,17 @@ public:
     // jump to next state
     void nextstate(std::unique_ptr<AppState>&) override;
     
-    Game();
+    Game(int stage);
     ~Game();
 private:
+    bool is_finished_;
+    // game level
     int stage_;
+    // game map
+    vector<vector<unique_ptr<Object>>> map_;
+    // 
+
+    void loadmap();
 };
 
 #endif // _DF_TANKWAR_GAME_H

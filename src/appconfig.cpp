@@ -5,6 +5,7 @@
 #include "appconfig.h"
 
 int AppConfig::player_nums = 1;
+int AppConfig::current_level = 1;
 SDL_Rect AppConfig::window_rect = {0, 0, 29*16, 26*16};
 SDL_Rect AppConfig::logo_rect = {20, 20, 406, 72};
 
@@ -17,4 +18,9 @@ std::string AppConfig::font_path(int index) {
     static std::vector<std::string> font{"resources/font/prstartk.ttf",
         "resources/font/arialbd.ttf", "resources/font/tank_font.ttk"};
     return font.at(index);
+}
+
+std::string AppConfig::level_file_path(int stage) {
+    std::string path("resources/levels/");
+    return path + std::to_string(stage);
 }

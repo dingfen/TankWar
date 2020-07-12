@@ -1,5 +1,6 @@
 #include "store.h"
 #include "engine.h"
+#include "game.h"
 
 inline SDL_Rect middle(int h = 32, int w = 32) {
     SDL_Rect p;
@@ -60,6 +61,24 @@ bool Store::finish() {
 }
 
 void Store::event(SDL_Event *e) {
+    if (e->type == SDL_KEYDOWN) {
+        switch (e->key.keysym.sym) {
+        case SDLK_UP:
+            break;
+        case SDLK_DOWN:
+            break;
+        case SDLK_SPACE:
+            break;
+        case SDLK_RETURN:
+            is_finished_ = true;
+            break;
+        case SDLK_w:
+        case SDLK_s:
+            break;
+        default:
+            break;
+        }
+    }
 
 }
 
@@ -77,5 +96,9 @@ Store::~Store() {
 }
 
 void Store::nextstate(std::unique_ptr<AppState>& app_state) {
+    if (AppConfig::current_level > 35) {
 
+    } else {
+        app_state.reset(new Game(AppConfig::current_level++));
+    }
 }
