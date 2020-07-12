@@ -1,6 +1,9 @@
 #include "game.h"
 #include "stone.h"
 #include "brick.h"
+#include "water.h"
+#include "bush.h"
+#include "ice.h"
 #include <fstream>
 
 Game::Game(int stage)
@@ -74,11 +77,14 @@ void Game::loadmap() {
             case '@' :
                 obj = shared_ptr<Object>(new Stone(i * AppConfig::tile_w, j * AppConfig::tile_h));
                 break;
-            case '%' : 
+            case '%' :
+                obj = shared_ptr<Object>(new Bush(i * AppConfig::tile_w, j * AppConfig::tile_h));
                 break;
             case '~' :
+                obj = shared_ptr<Object>(new Water(i * AppConfig::tile_w, j * AppConfig::tile_h));
                 break;
             case '-' :
+                obj = shared_ptr<Object>(new Ice(i * AppConfig::tile_w, j * AppConfig::tile_h));
                 break;
             default: obj = nullptr;
             }

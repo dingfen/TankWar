@@ -46,7 +46,7 @@ void SpriteConfig::init() {
     configs_[SpriteType::BULLET] = SpriteData(944, 128, 8, 8);
 
     configs_[SpriteType::LEFT_ENEMY] = SpriteData(944, 144, 16, 16);
-    configs_[SpriteType::STAGE_STATUS] = SpriteData(976, 64, 8, 8);
+    configs_[SpriteType::STAGE_STATUS] = SpriteData(976, 64, 32, 32);
     configs_[SpriteType::TANKS_LOGO] = SpriteData(0, 260, 406, 72);
 };
 

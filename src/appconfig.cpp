@@ -5,7 +5,7 @@
 #include "appconfig.h"
 
 int AppConfig::player_nums = 1;
-int AppConfig::current_level = 1;
+int AppConfig::current_level = 28;
 SDL_Rect AppConfig::window_rect = {0, 0, 29*16, 26*16};
 SDL_Rect AppConfig::logo_rect = {20, 20, 406, 72};
 
