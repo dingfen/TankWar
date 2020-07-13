@@ -44,8 +44,11 @@ private:
     // test tank
     Tank t_;
 
+    void init();
     void loadmap();
-    void loadstatus();
+
+    void drawmap();
+    void drawstatus();
 };
 
 #endif // _DF_TANKWAR_GAME_H

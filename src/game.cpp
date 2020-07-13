@@ -6,11 +6,16 @@
 #include "ice.h"
 #include <fstream>
 
-Game::Game(int stage)
-    : stage_(stage), is_finished_(false),
-    prepare_time_(AppConfig::prepare_time),
-    enemy_num_(20), t_(0, 0, SpriteType::TANK_A) {
+void Game::init() {
+    is_finished_ = false;
+    prepare_time_ = AppConfig::prepare_time;
+    enemy_num_ = 20;
+    loadmap();
+}
 
+Game::Game(int stage)
+    : stage_(stage), t_(0, 0, SpriteType::TANK_A) {
+    init();
 }
 
 Game::~Game() {
@@ -29,9 +34,9 @@ void Game::draw() {
         return ;
     }
     // load Game map and Draw it
-    loadmap();
+    drawmap();
     // load status
-    loadstatus();
+    drawstatus();
 
     t_.draw();
     e->update();
@@ -40,10 +45,10 @@ void Game::draw() {
 void Game::update(int dt) {
     if (prepare_time_ > 0) {
         prepare_time_ -= dt;
-        SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
+        // SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     } else {
         t_.update(dt);
-        SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
+        // SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     }
 }
 
@@ -63,6 +68,8 @@ void Game::event(SDL_Event *e) {
         case SDLK_RIGHT:
             t_.setdirection(Direction::RIGHT);
             break;
+        case SDLK_ESCAPE:
+            is_finished_ = true;
         default:
             break;
         }
@@ -74,7 +81,7 @@ bool Game::finish() {
 }
 
 void Game::nextstate(std::unique_ptr<AppState>& app_state) {
-
+    app_state.release();
 }
 
 void Game::loadmap() {
@@ -115,15 +122,17 @@ void Game::loadmap() {
         this->map_.push_back(row);
         j++;
     }
-
-    for(i = 0; i < map_.size(); i++)
-        for(j = 0; j < map_[i].size(); j++) {
-            if (map_[i][j])
-                map_[i][j]->draw();
-        }
 }
 
-void Game::loadstatus() {
+void Game::drawmap() {
+    for(int i = 0; i < map_.size(); i++)
+        for(int j = 0; j < map_[i].size(); j++) {
+            if (map_[i][j])
+                map_[i][j]->draw();
+    }
+}
+
+void Game::drawstatus() {
     Engine *e = Engine::getInstance();
     SDL_Rect dstrect;
 

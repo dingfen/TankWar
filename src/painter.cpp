@@ -94,6 +94,7 @@ void Painter::writeText(SDL_Point point, const std::string & text,
     
     if (SDL_RenderCopy(render_, ttf_text_, NULL, &rect) == -1)
         throw SDLErrorException();
+    SDL_FreeSurface(suf);
 }
 
 // void Painter::drawLine(const SDL_Point& start, const SDL_Point& end,

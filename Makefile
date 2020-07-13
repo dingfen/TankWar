@@ -6,13 +6,14 @@ OBJ_NAME = main
 
 C11FLAG = -std=c++11 -I include/
 SDLLIB=-lSDL2 -lSDL2_image -lSDL2_ttf
+Debug=-g -fno-inline
 
 #This is the target that compiles our executable
 all : $(OBJS)
 	g++ $(C11FLAG) $(OBJS) -w $(SDLLIB) -o $(OBJ_NAME)
 
 debug: $(OBJS)
-	g++ $(C11FLAG) $(OBJS) -w -g $(SDLLIB) -o $(OBJ_NAME)
+	g++ $(C11FLAG) $(OBJS) -w $(Debug) $(SDLLIB) -o $(OBJ_NAME)
 
 clean:
 	rm $(OBJ_NAME)

@@ -7,7 +7,7 @@ App::App()
     : is_running_(false) {}
 
 App::~App() {
-    is_running_ = false;
+    app_state_.release();
 }
 
 void App::init() throw() {
@@ -32,7 +32,8 @@ void App::run() {
         app_state_->update(0);
 
         is_running_ = true;
-        Uint32 time1, time2, delay = 15, duration;
+        Uint32 time1, time2, sum_time, delay = 15, duration;
+        int loop_count = 0;
         time1 = SDL_GetTicks();
         while(is_running_) {
             // processing one loop duration
@@ -52,7 +53,17 @@ void App::run() {
             // avoid testing too fast
             // if run too slow, should increase duration
             SDL_Delay(delay);
-
+            // sum_time += duration;
+            // loop_count++;
+            // if (sum_time > 200) {
+            //     double fps = (double)loop_count / sum_time * 1000;
+            //     if (fps > 60)
+            //         delay++;
+            //     else if (delay > 0)
+            //         delay--;
+            //     sum_time = 0;
+            //     loop_count = 0;
+            // }
         }
     } catch(const std::exception &e) {
         cerr << e.what() << endl;
