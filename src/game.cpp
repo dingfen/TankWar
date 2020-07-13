@@ -8,7 +8,8 @@
 
 Game::Game(int stage)
     : stage_(stage), is_finished_(false),
-    prepare_time_(AppConfig::prepare_time) {
+    prepare_time_(AppConfig::prepare_time),
+    enemy_num_(20), t_(0, 0, SpriteType::TANK_A) {
 
 }
 
@@ -29,8 +30,10 @@ void Game::draw() {
     }
     // load Game map and Draw it
     loadmap();
+    // load status
+    loadstatus();
 
-
+    t_.draw();
     e->update();
 }
 
@@ -39,12 +42,31 @@ void Game::update(int dt) {
         prepare_time_ -= dt;
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     } else {
+        t_.update(dt);
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     }
 }
 
 void Game::event(SDL_Event *e) {
-
+    if (e->type == SDL_KEYDOWN) {
+        switch (e->key.keysym.sym)
+        {
+        case SDLK_UP:
+            t_.setdirection(Direction::UP);
+            break;
+        case SDLK_DOWN:
+            t_.setdirection(Direction::DOWN);
+            break;
+        case SDLK_LEFT:
+            t_.setdirection(Direction::LEFT);
+            break;
+        case SDLK_RIGHT:
+            t_.setdirection(Direction::RIGHT);
+            break;
+        default:
+            break;
+        }
+    }
 }
 
 bool Game::finish() {
@@ -99,4 +121,22 @@ void Game::loadmap() {
             if (map_[i][j])
                 map_[i][j]->draw();
         }
+}
+
+void Game::loadstatus() {
+    Engine *e = Engine::getInstance();
+    SDL_Rect dstrect;
+
+    dstrect = AppConfig::status_rect;
+    e->drawRect(dstrect, SDL_Color{0xA0,0xA0,0xA0,0}, true);
+    
+    SDL_Rect srcrect = e->getSprite(SpriteType::LEFT_ENEMY);
+    
+    for(int i = 0; i < enemy_num_; i++) {
+        dstrect.x = AppConfig::status_rect.x + 8 + srcrect.w * (i % 2);
+        dstrect.y = 5 + srcrect.h * (i / 2);
+        dstrect.h = srcrect.h;
+        dstrect.w = srcrect.w;
+        e->draw(srcrect, dstrect);
+    }
 }

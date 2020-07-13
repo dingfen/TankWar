@@ -3,12 +3,11 @@
 
 Object::Object(double x, double y, SpriteType type)
     : x_(x), y_(y), type_(type) {
-        obj_rect_ = SpriteConfig::getInstance()->get(type).rect;
+
 }
 
 Object::Object(SDL_Point point, SpriteType type)
     : x_(point.x), y_(point.y) {
-        obj_rect_ = SpriteConfig::getInstance()->get(type).rect;
 
 }
 
@@ -22,6 +21,6 @@ void Object::update(int) {
 
 void Object::draw() {
     Engine *e = Engine::getInstance();
-
+    SDL_Rect obj_rect_ = e->getSprite(type_);
     e->draw(obj_rect_, SDL_Rect{x_, y_, AppConfig::tile_w, AppConfig::tile_h});
 }

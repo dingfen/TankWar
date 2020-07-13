@@ -20,13 +20,11 @@ public:
 
     // update
     virtual void update(int);
-private:
+protected:
     double x_;
     double y_;
     // indicate the object type
     SpriteType type_;
-    // this object's rect
-    SDL_Rect obj_rect_;
 };
 
 #endif // _DF_TANKWAR_OBJECT_H

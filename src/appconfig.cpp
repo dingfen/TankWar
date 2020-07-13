@@ -6,6 +6,12 @@
 
 int AppConfig::player_nums = 1;
 int AppConfig::current_level = 28;
+const int AppConfig::prepare_time = 3000;
+const int AppConfig::tile_h = 16;
+const int AppConfig::tile_w = 16;
+const double AppConfig::tank_speed = 0.08;
+const double AppConfig::shell_speed = 1.0;
+SDL_Rect AppConfig::status_rect = {26*16, 0, 3*16, 26*16};
 SDL_Rect AppConfig::window_rect = {0, 0, 29*16, 26*16};
 SDL_Rect AppConfig::logo_rect = {20, 20, 406, 72};
 

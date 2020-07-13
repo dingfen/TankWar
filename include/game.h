@@ -9,6 +9,7 @@
 
 #include "appstate.h"
 #include "object.h"
+#include "tank.h"
 #include <iostream>
 
 using std::vector;
@@ -38,8 +39,13 @@ private:
     vector<vector<shared_ptr<Object>>> map_;
     // prepare time at the beginning
     int prepare_time_;
+    // left enemy number
+    int enemy_num_;
+    // test tank
+    Tank t_;
 
     void loadmap();
+    void loadstatus();
 };
 
 #endif // _DF_TANKWAR_GAME_H
