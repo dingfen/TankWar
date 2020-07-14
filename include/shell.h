@@ -17,12 +17,16 @@ public:
     void draw() override;
 
     void update(int) override;
+
+    void destroy();
+    bool is_destroy();
 private:
     double speed_;
     Direction direction_;
-    bool is_stop_;
+    bool is_destroyed_;
 
     void init();
+    bool check_boundary();
 };
 
 #endif // _DF_TANKWAR_SHELL_H

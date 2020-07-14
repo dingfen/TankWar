@@ -17,6 +17,8 @@ public:
     // void draw() override;
 
     // void update(int) override;
+private:
+    bool is_destroyed_;
 };
 
 #endif // _DF_TANKWAR_BRICK_H

@@ -14,7 +14,7 @@ void Game::init() {
 }
 
 Game::Game(int stage)
-    : stage_(stage), t_(0, 0, SpriteType::TANK_A) {
+    : stage_(stage), t_(0, 0, 0) {
     init();
 }
 
@@ -45,10 +45,10 @@ void Game::draw() {
 void Game::update(int dt) {
     if (prepare_time_ > 0) {
         prepare_time_ -= dt;
-        // SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
+        SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     } else {
         t_.update(dt);
-        // SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
+        SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     }
 }
 

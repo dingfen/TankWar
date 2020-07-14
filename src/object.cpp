@@ -2,12 +2,14 @@
 #include "engine.h"
 
 Object::Object(double x, double y, SpriteType type)
-    : x_(x), y_(y), type_(type) {
+    : x_(x), y_(y), type_(type), 
+    w_(AppConfig::tile_w), h_(AppConfig::tile_h) {
 
 }
 
 Object::Object(SDL_Point point, SpriteType type)
-    : x_(point.x), y_(point.y) {
+    : x_(point.x), y_(point.y), 
+    w_(AppConfig::tile_w), h_(AppConfig::tile_h) {
 
 }
 
@@ -22,12 +24,5 @@ void Object::update(int) {
 void Object::draw() {
     Engine *e = Engine::getInstance();
     SDL_Rect objrect = e->getSprite(type_);
-    e->draw(objrect, SDL_Rect{x_, y_, AppConfig::tile_w, AppConfig::tile_h});
-}
-
-inline bool Object::check_boundary() {
-    if (x_ < 0 || x_ > AppConfig::map_rect.w 
-        || y_ < 0 || y_ > AppConfig::map_rect.h)
-        return false;
-    else return true;
+    e->draw(objrect, SDL_Rect{x_, y_, w_, h_});
 }

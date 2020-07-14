@@ -24,13 +24,18 @@ public:
 
     // update
     virtual void update(int);
+
+    double getX() {return x_;};
+    double getY() {return y_;};
+    double getW() {return w_;};
+    double getH() {return h_;};
 protected:
     double x_;
     double y_;
+    double w_;
+    double h_;
     // indicate the object type
     SpriteType type_;
-
-    inline bool check_boundary();
 };
 
 #endif // _DF_TANKWAR_OBJECT_H

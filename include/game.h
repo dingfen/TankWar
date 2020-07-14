@@ -9,7 +9,7 @@
 
 #include "appstate.h"
 #include "object.h"
-#include "tank.h"
+#include "player.h"
 #include <iostream>
 
 using std::vector;
@@ -42,7 +42,7 @@ private:
     // left enemy number
     int enemy_num_;
     // test tank
-    Tank t_;
+    Player t_;
 
     void init();
     void loadmap();

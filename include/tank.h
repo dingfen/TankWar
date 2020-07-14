@@ -7,6 +7,7 @@
 
 #include "object.h"
 #include "shell.h"
+#include <memory>
 
 class Tank : public Object {
 public:
@@ -19,16 +20,19 @@ public:
 
     void update(int) override;
 
-    void fire();
+    virtual void fire();
 
     void setdirection(Direction);
     Direction getdirection();
-private:
+    bool is_destroy();
+protected:
     Direction direction_;
     double speed_;
+    
+    bool is_destroyed_;
     bool is_stop_;
-    int shells_left_;
-    std::vector<Shell> shells;
+
+    std::vector<std::shared_ptr<Shell>> shells;
 
     void init();
 };
