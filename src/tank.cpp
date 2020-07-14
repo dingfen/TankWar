@@ -4,6 +4,7 @@ void Tank::init() {
     direction_ = Direction::UP;
     speed_ = AppConfig::tank_speed;
     is_stop_ = false;
+    shells_left_ = AppConfig::max_shell;
 }
 
 Tank::Tank(double x, double y, SpriteType type)
@@ -56,5 +57,11 @@ void Tank::update(int dt) {
         default:
             break;
         }
+    }
+}
+
+void Tank::fire() {
+    if (shells_left_ > 0) {
+        
     }
 }

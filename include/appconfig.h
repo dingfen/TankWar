@@ -20,6 +20,7 @@ class AppConfig {
     static const int tile_w;
     static const double tank_speed;
     static const double shell_speed;
+    static const int max_shell;
     
     // file data
     static std::string level_file_path(int);
@@ -28,6 +29,7 @@ class AppConfig {
 
     // app data
     static SDL_Rect status_rect;
+    static SDL_Rect map_rect;
     static SDL_Rect window_rect;
     static SDL_Rect logo_rect;
 };

@@ -70,6 +70,10 @@ void Game::event(SDL_Event *e) {
             break;
         case SDLK_ESCAPE:
             is_finished_ = true;
+            break;
+        case SDLK_RCTRL:
+            t_.fire();
+            break;
         default:
             break;
         }

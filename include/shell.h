@@ -9,14 +9,20 @@
 
 class Shell : public Object {
 public:
-    Shell(double x, double y);
-    Shell(SDL_Point);
+    Shell(double x, double y, Direction);
+    Shell(SDL_Point, Direction);
 
     ~Shell();
 
-    // void draw() override;
+    void draw() override;
 
-    // void update(int) override;
+    void update(int) override;
+private:
+    double speed_;
+    Direction direction_;
+    bool is_stop_;
+
+    void init();
 };
 
 #endif // _DF_TANKWAR_SHELL_H

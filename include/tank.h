@@ -6,11 +6,7 @@
 #define _DF_TANKWAR_TANK_H
 
 #include "object.h"
-
-enum class Direction {
-    UP = 0, RIGHT = 32, DOWN = 64, LEFT = 96
-};
-
+#include "shell.h"
 
 class Tank : public Object {
 public:
@@ -23,12 +19,16 @@ public:
 
     void update(int) override;
 
+    void fire();
+
     void setdirection(Direction);
     Direction getdirection();
 private:
     Direction direction_;
     double speed_;
     bool is_stop_;
+    int shells_left_;
+    std::vector<Shell> shells;
 
     void init();
 };
