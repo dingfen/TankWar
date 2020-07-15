@@ -15,12 +15,13 @@ public:
     Player(int, SDL_Point);
     ~Player();
 
-    void update(int) override;
+    void try_update(int) override;
 
-    // void fire() override;
+    void do_update() override;
 private:
     int player_id_;
     int score_;
+    bool is_stop_;
 
     void init();
 };

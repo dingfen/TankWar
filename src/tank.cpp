@@ -5,8 +5,9 @@ void Tank::init() {
     h_ = 32;
     direction_ = Direction::UP;
     speed_ = AppConfig::tank_speed;
-    is_stop_ = false;
+    is_blocked_ = false;
     is_destroyed_ = false;
+    ori_point_ = {x_, y_};
     for(int i = 0; i < AppConfig::max_shell; i++)
         shells.push_back(nullptr);
 }
@@ -23,6 +24,14 @@ Tank::Tank(SDL_Point p, SpriteType type)
 
 Tank::~Tank() {
     
+}
+
+void Tank::block() {
+    is_blocked_ = true;
+}
+
+void Tank::nonblock() {
+    is_blocked_ = false;
 }
 
 void Tank::setdirection(Direction d) {
@@ -50,26 +59,42 @@ void Tank::draw() {
     }
 }
 
-void Tank::update(int dt) {
-    if(!is_stop_) {
-        switch (direction_)
-        {
-        case Direction::UP:
-            y_ -= dt * speed_;
-            break;
-        case Direction::DOWN:
-            y_ += dt * speed_;
-            break;
-        case Direction::LEFT:
-            x_ -= dt * speed_;
-            break;
-        case Direction::RIGHT:
-            x_ += dt * speed_;
-            break;
-        default:
-            break;
+void Tank::try_update(int dt) {
+    ori_point_ = {x_, y_};
+    switch (direction_) {
+    case Direction::UP:
+        y_ -= dt * speed_;
+        break;
+    case Direction::DOWN:
+        y_ += dt * speed_;
+        break;
+    case Direction::LEFT:
+        x_ -= dt * speed_;
+        break;
+    case Direction::RIGHT:
+        x_ += dt * speed_;
+        break;
+    default:
+        break;
+    }
+    // shell process
+    for(auto& ps : shells) {
+        if (ps) {
+            ps->try_update(dt);
         }
     }
+}
+
+void Tank::do_update() {
+    if (is_blocked_) {
+        x_ = ori_point_.x;
+        y_ = ori_point_.y;
+    }
+    if (!checkX(this))
+        x_ = ori_point_.x;
+    if (!checkY(this))
+        y_ = ori_point_.y;
+        // shell process
     for(auto& ps : shells) {
         if (ps) {
             if (ps->is_destroy()) {
@@ -77,7 +102,7 @@ void Tank::update(int dt) {
                 ps = nullptr;
             }
             else {
-                ps->update(dt);
+                ps->do_update();
             }
         }
     }

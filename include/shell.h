@@ -16,17 +16,19 @@ public:
 
     void draw() override;
 
-    void update(int) override;
+    void try_update(int) override;
+
+    void do_update() override;
 
     void destroy();
     bool is_destroy();
 private:
+    SDL_Point ori_point_;
     double speed_;
     Direction direction_;
     bool is_destroyed_;
 
     void init();
-    bool check_boundary();
 };
 
 #endif // _DF_TANKWAR_SHELL_H

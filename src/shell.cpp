@@ -4,6 +4,7 @@ void Shell::init() {
     w_ = 8;
     h_ = 8;
     speed_ = AppConfig::shell_speed;
+    ori_point_ = {x_, y_};
     is_destroyed_ = false;
 }
 
@@ -28,35 +29,30 @@ void Shell::draw() {
     e->draw(objrect, SDL_Rect{x_, y_, w_, h_});
 }
 
-bool Shell::check_boundary() {
-    if (x_ < 0 || x_ > AppConfig::map_rect.w
-        || y_ < 0 || y_ > AppConfig::map_rect.h)
-        return false;
-    else return true;
+void Shell::try_update(int dt) {
+    ori_point_ = {x_, y_};
+    switch (direction_)
+    {
+    case Direction::UP:
+        y_ -= dt * speed_;
+        break;
+    case Direction::DOWN:
+        y_ += dt * speed_;
+        break;
+    case Direction::LEFT:
+        x_ -= dt * speed_;
+        break;
+    case Direction::RIGHT:
+        x_ += dt * speed_;
+        break;
+    default:
+        break;
+    }
 }
 
-void Shell::update(int dt) {
-    if(!is_destroyed_) {
-        switch (direction_)
-        {
-        case Direction::UP:
-            y_ -= dt * speed_;
-            break;
-        case Direction::DOWN:
-            y_ += dt * speed_;
-            break;
-        case Direction::LEFT:
-            x_ -= dt * speed_;
-            break;
-        case Direction::RIGHT:
-            x_ += dt * speed_;
-            break;
-        default:
-            break;
-        }
-        if (!check_boundary()) {
-           destroy();
-        }
+void Shell::do_update() {
+    if (!check_boundary(this)) {
+        destroy();
     }
 }
 

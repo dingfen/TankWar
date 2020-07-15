@@ -18,19 +18,24 @@ public:
 
     void draw() override;
 
-    void update(int) override;
+    void try_update(int) override;
+
+    void do_update() override;
 
     virtual void fire();
 
     void setdirection(Direction);
     Direction getdirection();
     bool is_destroy();
+    void block();
+    void nonblock();
 protected:
     Direction direction_;
     double speed_;
+    SDL_Point ori_point_;
     
     bool is_destroyed_;
-    bool is_stop_;
+    bool is_blocked_;
 
     std::vector<std::shared_ptr<Shell>> shells;
 

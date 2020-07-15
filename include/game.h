@@ -44,12 +44,15 @@ private:
     // players
     std::unique_ptr<Player> p1;
     std::unique_ptr<Player> p2;
+    // Tank t_;
 
     void init();
     void loadmap();
 
     void drawmap();
     void drawstatus();
+
+    bool collision_detect();
 };
 
 #endif // _DF_TANKWAR_GAME_H

@@ -44,7 +44,6 @@ void Game::draw() {
     drawmap();
     // load status
     drawstatus();
-
     p1->draw();
     if (p2) 
         p2->draw();
@@ -57,9 +56,19 @@ void Game::update(int dt) {
         prepare_time_ -= dt;
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     } else {
-        p1->update(dt);
+        p1->try_update(dt);
         if (p2)
-            p2->update(dt);
+            p2->try_update(dt);
+
+        bool collision_map = collision_detect();
+        if (collision_map) {
+            p1->block();
+        }
+        else p1->nonblock();
+
+        p1->do_update();
+        if (p2)
+            p2->do_update();
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     }
 }
@@ -142,12 +151,12 @@ void Game::drawmap() {
 void Game::drawstatus() {
     Engine *e = Engine::getInstance();
     SDL_Rect dstrect;
-
+    // paint gray
     dstrect = AppConfig::status_rect;
     e->drawRect(dstrect, SDL_Color{0xA0,0xA0,0xA0,0}, true);
     
+    // draw left enemy
     SDL_Rect srcrect = e->getSprite(SpriteType::LEFT_ENEMY);
-    
     for(int i = 0; i < enemy_num_; i++) {
         dstrect.x = AppConfig::status_rect.x + 8 + srcrect.w * (i % 2);
         dstrect.y = 5 + srcrect.h * (i / 2);
@@ -155,4 +164,28 @@ void Game::drawstatus() {
         dstrect.w = srcrect.w;
         e->draw(srcrect, dstrect);
     }
+    // draw stage info
+    srcrect = e->getSprite(SpriteType::STAGE_STATUS);
+    dstrect.x = AppConfig::status_rect.x + 8;
+    dstrect.y = 180;
+    dstrect.w = srcrect.w;
+    dstrect.h = srcrect.h;
+    e->draw(srcrect, dstrect);
+    e->writeText(SDL_Point{dstrect.x+8, dstrect.y+40}, 
+        std::to_string(stage_), SDL_Color{0, 0, 0, 0});
+}
+
+bool Game::collision_detect() {
+    SDL_bool in = SDL_FALSE;
+    for(auto &line : map_) {
+        for(auto &obj : line) {
+            if (obj) {
+                SDL_Rect lhs = p1->getRect();
+                SDL_Rect rhs = obj->getRect();
+                in = SDL_HasIntersection(&lhs, &rhs);
+                if (in) return in;
+            }
+        }
+    }
+    return false;
 }

@@ -21,14 +21,37 @@ public:
 
     // draw the object on the screen
     virtual void draw();
+    // try update
+    virtual void try_update(int);
+    // the real update
+    virtual void do_update();
 
-    // update
-    virtual void update(int);
+    double getX() const {return x_;};
+    double getY() const {return y_;};
+    double getW() const {return w_;};
+    double getH() const {return h_;};
+    SDL_Rect getRect() const { return SDL_Rect{x_, y_, w_, h_};};
+    
+    static bool checkX(const Object *obj) {
+        if (obj->getX() < 0 || obj->getX() > AppConfig::map_rect.w - obj->getW())
+            return false;
+        else 
+            return true;
+    }
 
-    double getX() {return x_;};
-    double getY() {return y_;};
-    double getW() {return w_;};
-    double getH() {return h_;};
+    static bool checkY(const Object *obj) {
+        if (obj->getY() < 0 || obj->getY() > AppConfig::map_rect.h - obj->getH())
+            return false;
+        else 
+            return true;
+    }
+
+    static bool check_boundary(const Object* obj) {
+        if (!checkX(obj) || !checkY(obj))
+            return false;
+        else 
+            return true;
+    }
 protected:
     double x_;
     double y_;

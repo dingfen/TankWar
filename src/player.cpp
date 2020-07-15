@@ -2,6 +2,7 @@
 
 void Player::init() {
     score_ = 0;
+    is_stop_ = false;
 }
 
 Player::Player(int id, double x, double y)
@@ -20,7 +21,7 @@ Player::~Player() {
 
 }
 
-void Player::update(int dt) {
+void Player::try_update(int dt) {
     const Uint8 *key_state = SDL_GetKeyboardState(NULL);
     if (player_id_ == 0) {
         if (key_state[SDL_SCANCODE_UP]) {
@@ -56,5 +57,13 @@ void Player::update(int dt) {
         }
     }
 
-    Tank::update(dt);
+    Tank::try_update(dt);
+}
+
+void Player::do_update() {
+    if (is_stop_) {
+        x_ = ori_point_.x;
+        y_ = ori_point_.y;
+    }
+    Tank::do_update();
 }
