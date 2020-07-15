@@ -41,8 +41,9 @@ private:
     int prepare_time_;
     // left enemy number
     int enemy_num_;
-    // test tank
-    Player t_;
+    // players
+    std::unique_ptr<Player> p1;
+    std::unique_ptr<Player> p2;
 
     void init();
     void loadmap();

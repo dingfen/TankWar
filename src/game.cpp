@@ -10,11 +10,18 @@ void Game::init() {
     is_finished_ = false;
     prepare_time_ = AppConfig::prepare_time;
     enemy_num_ = 20;
+    if (AppConfig::player_nums == 1) {
+        p1.reset(new Player(0, 0, 0));
+        p2.reset();
+    } else if (AppConfig::player_nums == 2) {
+        p1.reset(new Player(0, 0, 0));
+        p2.reset(new Player(1, 0, 32));
+    }
     loadmap();
 }
 
 Game::Game(int stage)
-    : stage_(stage), t_(0, 0, 0) {
+    : stage_(stage) {
     init();
 }
 
@@ -38,7 +45,10 @@ void Game::draw() {
     // load status
     drawstatus();
 
-    t_.draw();
+    p1->draw();
+    if (p2) 
+        p2->draw();
+    
     e->update();
 }
 
@@ -47,32 +57,25 @@ void Game::update(int dt) {
         prepare_time_ -= dt;
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     } else {
-        t_.update(dt);
+        p1->update(dt);
+        if (p2)
+            p2->update(dt);
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     }
 }
 
 void Game::event(SDL_Event *e) {
     if (e->type == SDL_KEYDOWN) {
-        switch (e->key.keysym.sym)
-        {
-        case SDLK_UP:
-            t_.setdirection(Direction::UP);
-            break;
-        case SDLK_DOWN:
-            t_.setdirection(Direction::DOWN);
-            break;
-        case SDLK_LEFT:
-            t_.setdirection(Direction::LEFT);
-            break;
-        case SDLK_RIGHT:
-            t_.setdirection(Direction::RIGHT);
-            break;
+        switch (e->key.keysym.sym) {
         case SDLK_ESCAPE:
             is_finished_ = true;
             break;
         case SDLK_RCTRL:
-            t_.fire();
+            p1->fire();
+            break;
+        case SDLK_LCTRL:
+            if(p2)
+                p2->fire();
             break;
         default:
             break;
