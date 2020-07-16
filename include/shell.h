@@ -22,11 +22,13 @@ public:
 
     void destroy();
     bool is_destroy();
+    void boom();
 private:
     SDL_Point ori_point_;
     double speed_;
     Direction direction_;
     bool is_destroyed_;
+    bool is_boom_;
 
     void init();
 };

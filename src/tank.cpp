@@ -9,7 +9,7 @@ void Tank::init() {
     is_destroyed_ = false;
     ori_point_ = {x_, y_};
     for(int i = 0; i < AppConfig::max_shell; i++)
-        shells.push_back(nullptr);
+        shells_.push_back(nullptr);
 }
 
 Tank::Tank(double x, double y, SpriteType type)
@@ -53,7 +53,7 @@ void Tank::draw() {
     srcrect.x += (int)direction_;
 
     e->draw(srcrect, SDL_Rect{x_, y_, w_, h_});
-    for(auto& ps : shells) {
+    for(auto& ps : shells_) {
         if (ps)
             ps->draw();
     }
@@ -78,7 +78,7 @@ void Tank::try_update(int dt) {
         break;
     }
     // shell process
-    for(auto& ps : shells) {
+    for(auto& ps : shells_) {
         if (ps) {
             ps->try_update(dt);
         }
@@ -95,7 +95,7 @@ void Tank::do_update() {
     if (!checkY(this))
         y_ = ori_point_.y;
         // shell process
-    for(auto& ps : shells) {
+    for(auto& ps : shells_) {
         if (ps) {
             if (ps->is_destroy()) {
                 ps.reset();
@@ -111,7 +111,7 @@ void Tank::do_update() {
 void Tank::fire() {
     int i = 0;
     while(i < AppConfig::max_shell) {
-        if (!shells[i]) {
+        if (!shells_[i]) {
             double x, y;
             switch(direction_) {
                 case Direction::UP:
@@ -131,9 +131,13 @@ void Tank::fire() {
                     y = y_ + (h_ - 8)/2;
                     break;
             }
-            shells[i].reset(new Shell(x, y, direction_));
+            shells_[i].reset(new Shell(x, y, direction_));
             break;
         }
         i++;
     }
+}
+
+std::vector<std::shared_ptr<Shell>>& Tank::shells() {
+    return shells_;
 }

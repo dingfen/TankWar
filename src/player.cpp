@@ -8,13 +8,13 @@ void Player::init() {
 Player::Player(int id, double x, double y)
     : player_id_(id),
     Tank(x, y, id ? SpriteType::PLAYER_2: SpriteType::PLAYER_1) {
-
+    init();
 }
 
 Player::Player(int id, SDL_Point point)
     : player_id_(id),
     Tank(point, id ? SpriteType::PLAYER_2: SpriteType::PLAYER_1) {
-
+    init();
 }
 
 Player::~Player() {
@@ -23,41 +23,56 @@ Player::~Player() {
 
 void Player::try_update(int dt) {
     const Uint8 *key_state = SDL_GetKeyboardState(NULL);
+    is_stop_ = false;
     if (player_id_ == 0) {
         if (key_state[SDL_SCANCODE_UP]) {
             direction_ = Direction::UP;
-            is_stop_ = false;
         } else if (key_state[SDL_SCANCODE_DOWN]) {
             direction_ = Direction::DOWN;
-            is_stop_ = false;
         } else if (key_state[SDL_SCANCODE_LEFT]) {
             direction_ = Direction::LEFT;
-            is_stop_ = false;
         } else if (key_state[SDL_SCANCODE_RIGHT]) {
             direction_ = Direction::RIGHT;
-            is_stop_ = false;
         } else {
             is_stop_ = true;
         }
     } else {
         if (key_state[SDL_SCANCODE_W]) {
             direction_ = Direction::UP;
-            is_stop_ = false;
         } else if (key_state[SDL_SCANCODE_S]) {
             direction_ = Direction::DOWN;
-            is_stop_ = false;
         } else if (key_state[SDL_SCANCODE_A]) {
             direction_ = Direction::LEFT;
-            is_stop_ = false;
         } else if (key_state[SDL_SCANCODE_D]) {
             direction_ = Direction::RIGHT;
-            is_stop_ = false;
         } else {
             is_stop_ = true;
         }
     }
-
-    Tank::try_update(dt);
+    if (!is_stop_) {
+        ori_point_ = {x_, y_};
+        switch (direction_) {
+        case Direction::UP:
+            y_ -= dt * speed_;
+            break;
+        case Direction::DOWN:
+            y_ += dt * speed_;
+            break;
+        case Direction::LEFT:
+            x_ -= dt * speed_;
+            break;
+        case Direction::RIGHT:
+            x_ += dt * speed_;
+            break;
+        default:
+            break;
+        }
+    }
+    for(auto& ps : shells_) {
+        if (ps) {
+            ps->try_update(dt);
+        }
+    }
 }
 
 void Player::do_update() {

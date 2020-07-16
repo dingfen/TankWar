@@ -29,6 +29,7 @@ public:
     bool is_destroy();
     void block();
     void nonblock();
+    std::vector<std::shared_ptr<Shell>>& shells();
 protected:
     Direction direction_;
     double speed_;
@@ -37,7 +38,7 @@ protected:
     bool is_destroyed_;
     bool is_blocked_;
 
-    std::vector<std::shared_ptr<Shell>> shells;
+    std::vector<std::shared_ptr<Shell>> shells_;
 
     void init();
 };

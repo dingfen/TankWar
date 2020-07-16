@@ -57,7 +57,13 @@ private:
     void collision_detect();
     // collision with player and map
     bool player_map_collision(const unique_ptr<Player>&);
-    
+    // collision with players
+    bool p1_p2_collision();
+
+    // the top booming detect function
+    void boom_detect();
+    // tank's shell boom the map
+    void shell_map_boom(Tank &);
 };
 
 #endif // _DF_TANKWAR_GAME_H

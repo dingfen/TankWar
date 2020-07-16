@@ -6,6 +6,7 @@ void Shell::init() {
     speed_ = AppConfig::shell_speed;
     ori_point_ = {x_, y_};
     is_destroyed_ = false;
+    is_boom_ = false;
 }
 
 Shell::Shell(double x, double y, Direction d)
@@ -51,6 +52,10 @@ void Shell::try_update(int dt) {
 }
 
 void Shell::do_update() {
+    if (is_boom_) {
+        // boom 
+        destroy();
+    }
     if (!check_boundary(this)) {
         destroy();
     }
@@ -62,4 +67,8 @@ void Shell::destroy() {
 
 bool Shell::is_destroy() {
     return is_destroyed_;
+}
+
+void Shell::boom() {
+    is_boom_ = true;
 }

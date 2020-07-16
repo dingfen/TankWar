@@ -60,6 +60,7 @@ void Game::update(int dt) {
         if (p2)
             p2->try_update(dt);
 
+        boom_detect();
         collision_detect();
         
         p1->do_update();
@@ -174,13 +175,14 @@ void Game::drawstatus() {
 void Game::collision_detect() {
     bool p1_map = player_map_collision(p1);
     bool p2_map = p2 ? player_map_collision(p2) : false;
+    bool p1_p2 = p1_p2_collision();
 
-    if(p1_map)  
+    if(p1_map || p1_p2)  
         p1->block();
     else 
         p1->nonblock();
     if (p2) {
-        if (p2_map)
+        if (p2_map || p1_p2)
             p2->block();
         else 
             p2->nonblock();
@@ -202,4 +204,38 @@ bool Game::player_map_collision(const unique_ptr<Player> &p) {
         }
     }
     return false;
+}
+
+bool Game::p1_p2_collision() {
+    if (!p2)
+        return false;
+    SDL_Rect pr1 = p1->getRect();
+    SDL_Rect pr2 = p2->getRect();
+    pr1.x += 2; pr1.y += 2; pr1.w -= 4; pr1.h -= 4;
+    pr2.x += 2; pr2.y += 2; pr2.w -= 4; pr2.h -= 4;
+    if (SDL_HasIntersection(&pr1, &pr2)) {
+        return true;
+    }
+    else return false;
+}
+
+void Game::boom_detect() {
+    shell_map_boom(*p1);
+}
+
+void Game::shell_map_boom(Tank &t) {
+    for(auto &s : t.shells()) {
+        if (s) {
+            SDL_Rect sherect = s->getRect();
+            for(auto &line : map_) {
+                for(auto &obj : line) {
+                    if (obj && std::dynamic_pointer_cast<Brick>(obj)) {
+                        SDL_Rect objrect = obj->getRect();
+                        if (SDL_HasIntersection(&sherect, &objrect))
+                            s->boom();
+                    }
+                }
+            }
+        }
+    }
 }
