@@ -36,7 +36,7 @@ private:
     void init() throw();
 
     bool is_running_;    // whether the game is running
-    unique_ptr<AppState> app_state_;
+    unique_ptr<AppState> app_state_;    // a ptr to the state
 };
 
 #endif // _DF_TANKWAR_APP_H

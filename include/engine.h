@@ -1,6 +1,7 @@
 /*
  * Engine class
  * contains renderer texture spite configer etc.
+ * use to wrap SDL API
  * singleton pattern, avoid to get resources again
  */
 #ifndef _DF_TANKWAR_ENGINE_H

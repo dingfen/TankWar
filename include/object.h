@@ -21,9 +21,11 @@ public:
 
     // draw the object on the screen
     virtual void draw();
-    // try update
+    // try update 
+    // first aggressively compute the new position 
     virtual void try_update(int);
     // the real update
+    // after collision detect, determine if update or roll back 
     virtual void do_update();
 
     double getX() const {return x_;};
@@ -32,6 +34,7 @@ public:
     double getH() const {return h_;};
     SDL_Rect getRect() const { return SDL_Rect{x_, y_, w_, h_};};
     
+    // check if object out of boundary
     static bool checkX(const Object *obj) {
         if (obj->getX() < 0 || obj->getX() > AppConfig::map_rect.w - obj->getW())
             return false;

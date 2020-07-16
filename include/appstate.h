@@ -15,15 +15,15 @@
 class AppState {
 public:
     virtual ~AppState() {};
-
+    // draw thing on the screen
     void virtual draw() = 0;
-
+    // flash the screen
     void virtual update(int) = 0;
-
+    // process event
     void virtual event(SDL_Event*) = 0;
-
+    // indicate whether this state finished
     bool virtual finish() = 0;
-
+    // change the ptr in App class, point to next state
     void virtual nextstate(std::unique_ptr<AppState>&) = 0;
 };
 
