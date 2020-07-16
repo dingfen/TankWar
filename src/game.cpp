@@ -60,12 +60,8 @@ void Game::update(int dt) {
         if (p2)
             p2->try_update(dt);
 
-        bool collision_map = collision_detect();
-        if (collision_map) {
-            p1->block();
-        }
-        else p1->nonblock();
-
+        collision_detect();
+        
         p1->do_update();
         if (p2)
             p2->do_update();
@@ -96,7 +92,7 @@ bool Game::finish() {
     return this->is_finished_;
 }
 
-void Game::nextstate(std::unique_ptr<AppState>& app_state) {
+void Game::nextstate(unique_ptr<AppState>& app_state) {
     app_state.release();
 }
 
@@ -175,15 +171,33 @@ void Game::drawstatus() {
         std::to_string(stage_), SDL_Color{0, 0, 0, 0});
 }
 
-bool Game::collision_detect() {
-    SDL_bool in = SDL_FALSE;
+void Game::collision_detect() {
+    bool p1_map = player_map_collision(p1);
+    bool p2_map = p2 ? player_map_collision(p2) : false;
+
+    if(p1_map)  
+        p1->block();
+    else 
+        p1->nonblock();
+    if (p2) {
+        if (p2_map)
+            p2->block();
+        else 
+            p2->nonblock();
+    }
+}
+
+bool Game::player_map_collision(const unique_ptr<Player> &p) {
     for(auto &line : map_) {
         for(auto &obj : line) {
             if (obj) {
-                SDL_Rect lhs = p1->getRect();
+                SDL_Rect lhs = p->getRect();
                 SDL_Rect rhs = obj->getRect();
-                in = SDL_HasIntersection(&lhs, &rhs);
-                if (in) return in;
+                // shrink the tank
+                // make it easy to pass through the alley
+                lhs.x += 2; lhs.y += 2; lhs.w -= 4; lhs.h -= 4;
+                if (SDL_HasIntersection(&lhs, &rhs))
+                    return true;
             }
         }
     }

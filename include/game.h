@@ -14,6 +14,7 @@
 
 using std::vector;
 using std::shared_ptr;
+using std::unique_ptr;
 using std::make_shared;
 
 class Game : public AppState {
@@ -27,7 +28,7 @@ public:
     // judge if stage is finished
     bool finish() override;
     // jump to next state
-    void nextstate(std::unique_ptr<AppState>&) override;
+    void nextstate(unique_ptr<AppState>&) override;
     
     Game(int stage);
     ~Game();
@@ -42,8 +43,8 @@ private:
     // left enemy number
     int enemy_num_;
     // players
-    std::unique_ptr<Player> p1;
-    std::unique_ptr<Player> p2;
+    unique_ptr<Player> p1;
+    unique_ptr<Player> p2;
     // Tank t_;
 
     void init();
@@ -52,7 +53,11 @@ private:
     void drawmap();
     void drawstatus();
 
-    bool collision_detect();
+    // the top collision detect function
+    void collision_detect();
+    // collision with player and map
+    bool player_map_collision(const unique_ptr<Player>&);
+    
 };
 
 #endif // _DF_TANKWAR_GAME_H
