@@ -48,6 +48,7 @@ void Game::draw() {
     if (p2) 
         p2->draw();
     
+    drawbush();
     e->update();
 }
 
@@ -59,10 +60,12 @@ void Game::update(int dt) {
         p1->try_update(dt);
         if (p2)
             p2->try_update(dt);
+        try_update_map(dt);
 
         boom_detect();
         collision_detect();
         
+        do_update_map();
         p1->do_update();
         if (p2)
             p2->do_update();
@@ -130,7 +133,10 @@ void Game::loadmap() {
                 break;
             default: obj = nullptr;
             }
-            row.push_back(obj);
+            if (auto p = std::dynamic_pointer_cast<Bush>(obj))
+                bush_.push_back(p);
+            else 
+                row.push_back(obj);
         }
         this->map_.push_back(row);
         j++;
@@ -142,6 +148,28 @@ void Game::drawmap() {
         for(int j = 0; j < map_[i].size(); j++) {
             if (map_[i][j])
                 map_[i][j]->draw();
+    }
+}
+
+void Game::drawbush() {
+    for(auto &p : bush_) {
+        p->draw();
+    }
+}
+
+void Game::try_update_map(int dt) {
+    for(int i = 0; i < map_.size(); i++)
+        for(int j = 0; j < map_[i].size(); j++) {
+            if (map_[i][j])
+                map_[i][j]->try_update(dt);
+    }
+}
+
+void Game::do_update_map() {
+    for(int i = 0; i < map_.size(); i++)
+        for(int j = 0; j < map_[i].size(); j++) {
+            if (map_[i][j])
+                map_[i][j]->do_update();
     }
 }
 
@@ -192,7 +220,7 @@ void Game::collision_detect() {
 bool Game::player_map_collision(const unique_ptr<Player> &p) {
     for(auto &line : map_) {
         for(auto &obj : line) {
-            if (obj) {
+            if (obj && !std::dynamic_pointer_cast<Ice>(obj)) {
                 SDL_Rect lhs = p->getRect();
                 SDL_Rect rhs = obj->getRect();
                 // shrink the tank
@@ -229,10 +257,12 @@ void Game::shell_map_boom(Tank &t) {
             SDL_Rect sherect = s->getRect();
             for(auto &line : map_) {
                 for(auto &obj : line) {
-                    if (obj && std::dynamic_pointer_cast<Brick>(obj)) {
+                    if (obj && (std::dynamic_pointer_cast<Brick>(obj)
+                        || std::dynamic_pointer_cast<Stone>(obj))) {
                         SDL_Rect objrect = obj->getRect();
                         if (SDL_HasIntersection(&sherect, &objrect))
                             s->boom();
+                            obj->boom();
                     }
                 }
             }

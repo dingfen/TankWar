@@ -23,12 +23,17 @@ public:
     void destroy();
     bool is_destroy();
     void boom();
+
+    static const int shell_flicker = 50;
 private:
     SDL_Point ori_point_;
     double speed_;
     Direction direction_;
     bool is_destroyed_;
     bool is_boom_;
+
+    int flash_cycle_;   // see Water.h
+    int texture_off_;   // see Water.h
 
     void init();
 };

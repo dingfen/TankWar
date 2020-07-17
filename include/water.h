@@ -14,9 +14,14 @@ public:
 
     ~Water();
 
-    // void draw() override;
+    void draw() override;
 
-    // void update(int) override;
+    void try_update(int) override;
+    
+    static const int water_flicker = 350;
+private:
+    int flash_cycle_;   // the water flicker cycle
+    int texture_off_;   // when water flicker, it needs change the png
 };
 
 #endif // _DF_TANKWAR_WATER_H

@@ -5,7 +5,7 @@
 #include "appconfig.h"
 
 int AppConfig::player_nums = 1;
-int AppConfig::current_level = 1;
+int AppConfig::current_level = 10;
 const int AppConfig::max_shell = 4;
 const int AppConfig::prepare_time = 3000;
 const int AppConfig::tile_h = 16;

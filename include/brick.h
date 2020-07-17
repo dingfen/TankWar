@@ -17,8 +17,11 @@ public:
     // void draw() override;
 
     // void update(int) override;
+
+    void boom(int);
 private:
     bool is_destroyed_;
+    int health_point_;
 };
 
 #endif // _DF_TANKWAR_BRICK_H

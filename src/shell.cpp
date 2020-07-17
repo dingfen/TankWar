@@ -7,6 +7,8 @@ void Shell::init() {
     ori_point_ = {x_, y_};
     is_destroyed_ = false;
     is_boom_ = false;
+    flash_cycle_ = 0;
+    texture_off_ = 0;
 }
 
 Shell::Shell(double x, double y, Direction d)
@@ -25,38 +27,51 @@ Shell::~Shell() {
 
 void Shell::draw() {
     Engine *e = Engine::getInstance();
-    SDL_Rect objrect = e->getSprite(type_);
-    objrect.x += (int)direction_/4;
-    e->draw(objrect, SDL_Rect{x_, y_, w_, h_});
+    SDL_Rect objrect;
+    if (is_boom_) {
+        type_ = SpriteType::DESTROY_BULLET;
+        objrect = e->getSprite(type_, texture_off_);
+        w_ = 32;
+        h_ = 32;
+        e->draw(objrect, SDL_Rect{x_-12, y_-12, w_, h_});
+    } else {
+        objrect = e->getSprite(type_);
+        objrect.x += (int)direction_/4;
+        e->draw(objrect, SDL_Rect{x_, y_, w_, h_});
+    }
 }
 
 void Shell::try_update(int dt) {
-    ori_point_ = {x_, y_};
-    switch (direction_)
-    {
-    case Direction::UP:
-        y_ -= dt * speed_;
-        break;
-    case Direction::DOWN:
-        y_ += dt * speed_;
-        break;
-    case Direction::LEFT:
-        x_ -= dt * speed_;
-        break;
-    case Direction::RIGHT:
-        x_ += dt * speed_;
-        break;
-    default:
-        break;
+    if (!is_boom_) {
+        ori_point_ = {x_, y_};
+        switch (direction_)
+        {
+        case Direction::UP:
+            y_ -= dt * speed_;
+            break;
+        case Direction::DOWN:
+            y_ += dt * speed_;
+            break;
+        case Direction::LEFT:
+            x_ -= dt * speed_;
+            break;
+        case Direction::RIGHT:
+            x_ += dt * speed_;
+            break;
+        default:
+            break;
+        }
+    } else {
+        flash_cycle_ += dt;
+        if (flash_cycle_ > shell_flicker) {
+            texture_off_ ++;
+            flash_cycle_ = 0;
+        }
     }
 }
 
 void Shell::do_update() {
-    if (is_boom_) {
-        // boom 
-        destroy();
-    }
-    if (!check_boundary(this)) {
+    if (texture_off_ > 4 || !check_boundary(this)) {
         destroy();
     }
 }

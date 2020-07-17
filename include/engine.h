@@ -24,8 +24,10 @@ public:
         return painter_;
     }
 
-    SDL_Rect getSprite(SpriteType type) {
-        return sc_->get(type).rect;
+    SDL_Rect getSprite(SpriteType type, int off = 0) {
+        SDL_Rect ret = sc_->get(type).rect;
+        ret.y += off * ret.h;
+        return ret;
     }
 
     void update();

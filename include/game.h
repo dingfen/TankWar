@@ -9,6 +9,7 @@
 
 #include "appstate.h"
 #include "object.h"
+#include "bush.h"
 #include "player.h"
 #include <iostream>
 
@@ -36,8 +37,9 @@ private:
     bool is_finished_;
     // game level
     int stage_;
-    // game map
+    // game map without bush
     vector<vector<shared_ptr<Object>>> map_;
+    vector<shared_ptr<Bush>> bush_;
     // prepare time at the beginning
     int prepare_time_;
     // left enemy number
@@ -51,7 +53,12 @@ private:
     void loadmap();
 
     void drawmap();
+    void drawbush();    // bush must be last one drawn
+    void try_update_map(int);
+    void do_update_map();
     void drawstatus();
+    // void try_update_status(int);
+    // void do_update_status();
 
     // the top collision detect function
     void collision_detect();
