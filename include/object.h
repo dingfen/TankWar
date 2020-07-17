@@ -27,6 +27,8 @@ public:
     // the real update
     // after collision detect, determine if update or roll back 
     virtual void do_update();
+    // whether thing has been destroyed
+    virtual bool is_destroy();
 
     double getX() const {return x_;};
     double getY() const {return y_;};

@@ -24,19 +24,31 @@ public:
 
     virtual void fire();
 
+    bool is_destroy() override;
+    void destroy();
+    bool is_boom();
+    void boom(int);
+
     void setdirection(Direction);
     Direction getdirection();
-    bool is_destroy();
+
     void block();
     void nonblock();
     std::vector<std::shared_ptr<Shell>>& shells();
+
+    static const int tank_flicker = 70;
 protected:
     Direction direction_;
-    double speed_;
     SDL_Point ori_point_;
+    double speed_;
     
     bool is_destroyed_;
+    bool is_boom_;
     bool is_blocked_;
+    int health_point_;
+
+    int flash_cycle_;   // see Water.h
+    int texture_off_;   // see Water.h
 
     std::vector<std::shared_ptr<Shell>> shells_;
 

@@ -8,7 +8,7 @@ Object::Object(double x, double y, SpriteType type)
 }
 
 Object::Object(SDL_Point point, SpriteType type)
-    : x_(point.x), y_(point.y), 
+    : x_(point.x), y_(point.y), type_(type),
     w_(AppConfig::tile_w), h_(AppConfig::tile_h) {
 
 }
@@ -21,7 +21,11 @@ void Object::try_update(int) {
 }
 
 void Object::do_update() {
-    SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
+    // SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
+}
+
+bool Object::is_destroy() {
+    return false;
 }
 
 void Object::draw() {

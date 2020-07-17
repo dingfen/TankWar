@@ -14,6 +14,9 @@ class AppConfig {
   public:
     // games data
     static int player_nums;
+    static const int max_enemy_nums;
+    static const SDL_Point p1_start_point;
+    static const SDL_Point p2_start_point;
     static int current_level;
     static const int prepare_time;
     static const int tile_h;
@@ -21,6 +24,7 @@ class AppConfig {
     static const double tank_speed;
     static const double shell_speed;
     static const int max_shell;
+    static const int shell_damage;
     
     // file data
     static std::string level_file_path(int);

@@ -11,12 +11,14 @@ void Game::init() {
     prepare_time_ = AppConfig::prepare_time;
     enemy_num_ = 20;
     if (AppConfig::player_nums == 1) {
-        p1.reset(new Player(0, 0, 0));
+        p1.reset(new Player(0, AppConfig::p1_start_point));
         p2.reset();
     } else if (AppConfig::player_nums == 2) {
-        p1.reset(new Player(0, 0, 0));
-        p2.reset(new Player(1, 0, 32));
+        p1.reset(new Player(0, AppConfig::p1_start_point));
+        p2.reset(new Player(1, AppConfig::p2_start_point));
     }
+    for(int i = 0; i < AppConfig::max_enemy_nums; i++)
+        enemy_tanks_.push_back(nullptr);
     loadmap();
 }
 
@@ -44,9 +46,7 @@ void Game::draw() {
     drawmap();
     // load status
     drawstatus();
-    p1->draw();
-    if (p2) 
-        p2->draw();
+    drawtank();
     
     drawbush();
     e->update();
@@ -57,18 +57,14 @@ void Game::update(int dt) {
         prepare_time_ -= dt;
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     } else {
-        p1->try_update(dt);
-        if (p2)
-            p2->try_update(dt);
+        try_update_tank(dt);
         try_update_map(dt);
 
         boom_detect();
         collision_detect();
         
         do_update_map();
-        p1->do_update();
-        if (p2)
-            p2->do_update();
+        do_update_tank();
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     }
 }
@@ -168,8 +164,14 @@ void Game::try_update_map(int dt) {
 void Game::do_update_map() {
     for(int i = 0; i < map_.size(); i++)
         for(int j = 0; j < map_[i].size(); j++) {
-            if (map_[i][j])
-                map_[i][j]->do_update();
+            if (map_[i][j]) {
+                if (map_[i][j]->is_destroy()) {
+                    map_[i][j].reset();
+                    map_[i][j] = nullptr;
+                } else {
+                    map_[i][j]->do_update();
+                }
+            }
     }
 }
 
@@ -198,6 +200,36 @@ void Game::drawstatus() {
     e->draw(srcrect, dstrect);
     e->writeText(SDL_Point{dstrect.x+8, dstrect.y+40}, 
         std::to_string(stage_), SDL_Color{0, 0, 0, 0});
+}
+
+void Game::drawtank() {
+    p1->draw();
+    if (p2) 
+        p2->draw();
+    for(auto &t : enemy_tanks_) {
+        if(t)
+            t->draw();
+    }
+}
+
+void Game::try_update_tank(int dt) {
+    p1->try_update(dt);
+    if (p2)
+        p2->try_update(dt);
+    for(auto &t : enemy_tanks_) {
+        if (t)
+            t->try_update(dt);
+    }
+}
+
+void Game::do_update_tank() {
+    p1->do_update();
+    if (p2)
+        p2->do_update();
+    for(auto &t : enemy_tanks_) {
+        if (t)
+            t->do_update();
+    }
 }
 
 void Game::collision_detect() {
@@ -249,21 +281,51 @@ bool Game::p1_p2_collision() {
 
 void Game::boom_detect() {
     shell_map_boom(*p1);
+    // shell_tank_boom(*p1, t_);
+    if (p2) {
+        shell_map_boom(*p2);
+        // shell_tank_boom(*p2, t_);
+    }
 }
 
 void Game::shell_map_boom(Tank &t) {
     for(auto &s : t.shells()) {
-        if (s) {
+        if (s && !s->is_boom()) {
             SDL_Rect sherect = s->getRect();
             for(auto &line : map_) {
                 for(auto &obj : line) {
-                    if (obj && (std::dynamic_pointer_cast<Brick>(obj)
-                        || std::dynamic_pointer_cast<Stone>(obj))) {
-                        SDL_Rect objrect = obj->getRect();
-                        if (SDL_HasIntersection(&sherect, &objrect))
-                            s->boom();
-                            obj->boom();
+                    if (obj) {
+                        if(auto p = std::dynamic_pointer_cast<Brick>(obj)) {
+                            SDL_Rect objrect = obj->getRect();
+                            if (SDL_HasIntersection(&sherect, &objrect)) {
+                                s->boom();
+                                p->boom(s->damage());
+                            }
+                        }
+                        else if(auto p = std::dynamic_pointer_cast<Stone>(obj)) {
+                            SDL_Rect objrect = obj->getRect();
+                            if (SDL_HasIntersection(&sherect, &objrect)) {
+                                s->boom();
+                                p->boom(s->damage());
+                            }
+                        }
                     }
+                }
+            }
+        }
+    }
+}
+
+void Game::shell_tank_boom(Tank &attacker, Tank & victim) {
+    for(auto &s : attacker.shells()) {
+        if (s && !s->is_boom()) {
+            SDL_Rect sherect = s->getRect();
+            if (!victim.is_boom()) {
+                SDL_Rect objrect = victim.getRect();
+                objrect.x += 2; objrect.y += 2; objrect.w -= 4; objrect.h -= 4;
+                if (SDL_HasIntersection(&sherect, &objrect)) {
+                    s->boom();
+                    victim.boom(s->damage());
                 }
             }
         }

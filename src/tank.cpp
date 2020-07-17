@@ -7,6 +7,10 @@ void Tank::init() {
     speed_ = AppConfig::tank_speed;
     is_blocked_ = false;
     is_destroyed_ = false;
+    is_boom_ = false;
+    health_point_ = 20;
+    flash_cycle_ = 0;
+    texture_off_ = 0;
     ori_point_ = {x_, y_};
     for(int i = 0; i < AppConfig::max_shell; i++)
         shells_.push_back(nullptr);
@@ -42,17 +46,38 @@ Direction Tank::getdirection() {
     return this->direction_;
 }
 
+void Tank::destroy() {
+    is_destroyed_ = true;
+}
+
 bool Tank::is_destroy() {
     return is_destroyed_;
 }
 
+void Tank::boom(int d) {
+    health_point_ -= d;
+    if (health_point_ <= 0)
+        is_boom_ = true;
+}
+
+bool Tank::is_boom() {
+    return is_boom_;
+}
+
 void Tank::draw() {
     Engine *e = Engine::getInstance();
-
-    SDL_Rect srcrect = e->getSprite(type_);
-    srcrect.x += (int)direction_;
-
-    e->draw(srcrect, SDL_Rect{x_, y_, w_, h_});
+    SDL_Rect srcrect;
+    if (is_boom_) {
+        type_ = SpriteType::DESTROY_TANK;
+        srcrect = e->getSprite(type_, texture_off_);
+        w_ = 64;
+        h_ = 64;
+        e->draw(srcrect, SDL_Rect{x_-16, y_-16, w_, h_});
+    } else {
+        SDL_Rect srcrect = e->getSprite(type_);
+        srcrect.x += (int)direction_;
+        e->draw(srcrect, SDL_Rect{x_, y_, w_, h_});
+    }
     for(auto& ps : shells_) {
         if (ps)
             ps->draw();
@@ -60,22 +85,30 @@ void Tank::draw() {
 }
 
 void Tank::try_update(int dt) {
-    ori_point_ = {x_, y_};
-    switch (direction_) {
-    case Direction::UP:
-        y_ -= dt * speed_;
-        break;
-    case Direction::DOWN:
-        y_ += dt * speed_;
-        break;
-    case Direction::LEFT:
-        x_ -= dt * speed_;
-        break;
-    case Direction::RIGHT:
-        x_ += dt * speed_;
-        break;
-    default:
-        break;
+    if (!is_boom_) {
+        ori_point_ = {x_, y_};
+        switch (direction_) {
+        case Direction::UP:
+            y_ -= dt * speed_;
+            break;
+        case Direction::DOWN:
+            y_ += dt * speed_;
+            break;
+        case Direction::LEFT:
+            x_ -= dt * speed_;
+            break;
+        case Direction::RIGHT:
+            x_ += dt * speed_;
+            break;
+        default:
+            break;
+        }
+    } else {
+        flash_cycle_ += dt;
+        if (flash_cycle_ > tank_flicker) {
+            texture_off_ ++;
+            flash_cycle_ = 0;
+        }
     }
     // shell process
     for(auto& ps : shells_) {
@@ -94,9 +127,11 @@ void Tank::do_update() {
         x_ = ori_point_.x;
     if (!checkY(this))
         y_ = ori_point_.y;
-        // shell process
+    // shell process
+    bool shell_flying = false;
     for(auto& ps : shells_) {
         if (ps) {
+            shell_flying = true;
             if (ps->is_destroy()) {
                 ps.reset();
                 ps = nullptr;
@@ -105,6 +140,9 @@ void Tank::do_update() {
                 ps->do_update();
             }
         }
+    }
+    if (!shell_flying && texture_off_ > 6) {
+        destroy();
     }
 }
 

@@ -11,6 +11,7 @@
 #include "object.h"
 #include "bush.h"
 #include "player.h"
+#include "enemy.h"
 #include <iostream>
 
 using std::vector;
@@ -48,17 +49,21 @@ private:
     unique_ptr<Player> p1;
     unique_ptr<Player> p2;
     // Tank t_;
+    vector<shared_ptr<Enemy>> enemy_tanks_;
 
     void init();
     void loadmap();
 
     void drawmap();
-    void drawbush();    // bush must be last one drawn
     void try_update_map(int);
     void do_update_map();
     void drawstatus();
     // void try_update_status(int);
     // void do_update_status();
+    void drawbush();    // bush must be last one drawn
+    void drawtank();
+    void try_update_tank(int);
+    void do_update_tank();
 
     // the top collision detect function
     void collision_detect();
@@ -71,6 +76,8 @@ private:
     void boom_detect();
     // tank's shell boom the map
     void shell_map_boom(Tank &);
+    // tank's shell boom the tank
+    void shell_tank_boom(Tank &, Tank &);
 };
 
 #endif // _DF_TANKWAR_GAME_H

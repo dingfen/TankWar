@@ -4,6 +4,7 @@ void Shell::init() {
     w_ = 8;
     h_ = 8;
     speed_ = AppConfig::shell_speed;
+    damage_ = AppConfig::shell_damage;
     ori_point_ = {x_, y_};
     is_destroyed_ = false;
     is_boom_ = false;
@@ -23,6 +24,10 @@ Shell::Shell(SDL_Point p, Direction d)
 
 Shell::~Shell() {
     
+}
+
+int Shell::damage() {
+    return damage_;
 }
 
 void Shell::draw() {
@@ -86,4 +91,8 @@ bool Shell::is_destroy() {
 
 void Shell::boom() {
     is_boom_ = true;
+}
+
+bool Shell::is_boom() {
+    return is_boom_;
 }

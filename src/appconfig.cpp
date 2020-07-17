@@ -5,11 +5,15 @@
 #include "appconfig.h"
 
 int AppConfig::player_nums = 1;
+const int AppConfig::max_enemy_nums = 4;
+const SDL_Point AppConfig::p1_start_point = {128, 384};
+const SDL_Point AppConfig::p2_start_point = {256, 384};
 int AppConfig::current_level = 10;
 const int AppConfig::max_shell = 4;
 const int AppConfig::prepare_time = 3000;
 const int AppConfig::tile_h = 16;
 const int AppConfig::tile_w = 16;
+const int AppConfig::shell_damage = 25;
 const double AppConfig::tank_speed = 0.08;
 const double AppConfig::shell_speed = 0.23;
 SDL_Rect AppConfig::status_rect = {26*16, 0, 3*16, 26*16};

@@ -20,15 +20,18 @@ public:
 
     void do_update() override;
 
+    bool is_destroy() override;
     void destroy();
-    bool is_destroy();
+    bool is_boom();
     void boom();
+    int damage();
 
     static const int shell_flicker = 50;
 private:
+    Direction direction_;
     SDL_Point ori_point_;
     double speed_;
-    Direction direction_;
+    int damage_;
     bool is_destroyed_;
     bool is_boom_;
 
