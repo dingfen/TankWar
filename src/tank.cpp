@@ -66,6 +66,10 @@ bool Tank::is_boom() const{
     return is_boom_;
 }
 
+bool Tank::is_coming() const {
+    return is_coming_;
+}
+
 void Tank::draw() {
     Engine *e = Engine::getInstance();
     SDL_Rect srcrect;

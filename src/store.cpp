@@ -1,6 +1,7 @@
 #include "store.h"
 #include "engine.h"
 #include "game.h"
+#include "menu.h"
 
 inline SDL_Rect middle(int h = 32, int w = 32) {
     SDL_Rect p;
@@ -97,7 +98,7 @@ Store::~Store() {
 
 void Store::nextstate(std::unique_ptr<AppState>& app_state) {
     if (AppConfig::current_level > 35) {
-
+        app_state.reset(new Menu());
     } else {
         app_state.reset(new Game(AppConfig::current_level++));
     }

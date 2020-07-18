@@ -28,6 +28,7 @@ public:
     void destroy();
     bool is_boom() const;
     void boom(int);
+    bool is_coming() const;
 
     void setdirection(Direction);
     Direction getdirection();

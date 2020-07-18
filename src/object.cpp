@@ -21,7 +21,6 @@ void Object::try_update(int) {
 }
 
 void Object::do_update() {
-    // SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
 }
 
 bool Object::is_destroy() {

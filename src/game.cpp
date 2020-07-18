@@ -4,7 +4,9 @@
 #include "water.h"
 #include "bush.h"
 #include "ice.h"
+#include "store.h"
 #include <algorithm>
+#include <random>
 #include <fstream>
 
 void Game::init() {
@@ -23,9 +25,6 @@ void Game::init() {
         enemy_tanks_.push_back(nullptr);
     }
 
-    for(int i = 0; i < AppConfig::max_enemy_nums; i++) {
-        enemy_tanks_[i].reset(new Enemy(32*i, 0, SpriteType::TANK_A));
-    }
     loadmap();
 }
 
@@ -42,7 +41,7 @@ Game::~Game() {
 void Game::draw() {
     Engine *e = Engine::getInstance();
     e->clear();
-    // load the teaser
+    // load the teaser to prepare
     if (prepare_time_ > 0) {
         std::string text = "STAGE " + std::to_string(stage_);
         e->writeText(SDL_Point{-1, -1}, text, SDL_Color{0xff, 0xff, 0, 0}, 20);
@@ -63,6 +62,11 @@ void Game::update(int dt) {
     if (prepare_time_ > 0) {
         prepare_time_ -= dt;
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
+    } else if (enemy_num_ <= 0) {
+        if (over_time_ > 0)
+            over_time_ -= dt;
+        else
+            is_finished_ = true;
     } else {
         try_update_tank(dt);
         try_update_map(dt);
@@ -100,7 +104,7 @@ bool Game::finish() {
 }
 
 void Game::nextstate(unique_ptr<AppState>& app_state) {
-    app_state.release();
+    app_state.reset(new Store());
 }
 
 void Game::loadmap() {
@@ -226,6 +230,8 @@ void Game::try_update_tank(int dt) {
     for(auto &t : enemy_tanks_) {
         if (t)
             t->try_update(dt);
+        else if (enemy_num_ > 0)
+            t = generatenemy();
     }
 }
 
@@ -243,6 +249,32 @@ void Game::do_update_tank() {
             }
         }
     }
+}
+
+shared_ptr<Enemy> Game::generatenemy() {
+    srand(time(NULL));
+    int i = rand() % 3;
+    int t = rand() % 4;
+    SDL_Point pos = AppConfig::enemy_start_point(i);
+    SpriteType type = (SpriteType)t;
+    shared_ptr<Enemy> pe(new Enemy(pos, type));
+
+    // check if there has enough space
+    for(auto &other : enemy_tanks_) {
+        if(tank_tank_collision(pe.get(), other.get())) {
+            pe.reset();
+            return nullptr;
+        }
+    }
+    if (tank_tank_collision(p1.get(), pe.get())) {
+        pe.reset();
+        return nullptr;
+    }
+    if (p2 && tank_tank_collision(p2.get(), pe.get())) {
+        pe.reset();
+        return nullptr;
+    }
+    return pe;
 }
 
 void Game::collision_detect() {
@@ -280,7 +312,7 @@ void Game::collision_detect() {
             p2->block();
     }
 
-    // 
+    // if get blocked enemy tank can't move too
 }
 
 bool Game::tank_map_collision(const Tank *p) {
@@ -362,15 +394,18 @@ void Game::shell_tank_boom(Tank *attacker, Tank *victim) {
     for(auto &s : attacker->shells()) {
         if (s && !s->is_boom()) {
             SDL_Rect sherect = s->getRect();
-            if (!victim->is_boom()) {
+            if (!victim->is_boom() && !victim->is_coming()) {
                 SDL_Rect objrect = victim->getRect();
                 objrect.x += 2; objrect.y += 2; objrect.w -= 4; objrect.h -= 4;
                 if (SDL_HasIntersection(&sherect, &objrect)) {
                     s->boom();
                     victim->boom(s->damage());
+
+                    // if victim is enemy and it is boomed then add score
                     if (dynamic_cast<Enemy*>(victim) && victim->is_boom()) {
                         enemy_num_--;
-                        dynamic_cast<Player*>(attacker)->addscore();
+                        if (auto p = dynamic_cast<Player*>(attacker))
+                            p->addscore();
                     }
                 }
             }

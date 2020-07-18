@@ -17,9 +17,10 @@ class AppConfig {
     static const int max_enemy_nums;
     static const SDL_Point p1_start_point;
     static const SDL_Point p2_start_point;
-    static const SDL_Point enemy_start_point[3];
+    static SDL_Point enemy_start_point(int);
     static int current_level;
     static const int prepare_time;
+    static const int game_ending_time;
     static const int tile_h;
     static const int tile_w;
     static const double tank_speed;

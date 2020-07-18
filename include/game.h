@@ -43,6 +43,8 @@ private:
     vector<shared_ptr<Bush>> bush_;
     // prepare time at the beginning
     int prepare_time_;
+    // prepare time when game over
+    int over_time_;
     // left enemy number
     int enemy_num_;
     // players
@@ -55,6 +57,7 @@ private:
     void loadmap();
 
     // generate enemy tanks
+    shared_ptr<Enemy> generatenemy();
 
     void drawmap();
     void try_update_map(int);

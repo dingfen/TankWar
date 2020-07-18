@@ -8,10 +8,10 @@ int AppConfig::player_nums = 1;
 const int AppConfig::max_enemy_nums = 4;
 const SDL_Point AppConfig::p1_start_point = {128, 384};
 const SDL_Point AppConfig::p2_start_point = {256, 384};
-const SDL_Point enemy_start_point[3] = {{0, 0},{192, 0},{384, 0}};
-int AppConfig::current_level = 10;
+int AppConfig::current_level = 1;
 const int AppConfig::max_shell = 4;
 const int AppConfig::prepare_time = 3000;
+const int AppConfig::game_ending_time = 2000;
 const int AppConfig::tile_h = 16;
 const int AppConfig::tile_w = 16;
 const int AppConfig::shell_damage = 25;
@@ -21,6 +21,11 @@ SDL_Rect AppConfig::status_rect = {26*16, 0, 3*16, 26*16};
 SDL_Rect AppConfig::map_rect = {0, 0, 26*16, 26*16};
 SDL_Rect AppConfig::window_rect = {0, 0, 29*16, 26*16};
 SDL_Rect AppConfig::logo_rect = {20, 20, 406, 72};
+
+SDL_Point AppConfig::enemy_start_point(int i) {
+    SDL_Point p{192*i, 0};
+    return p;
+}
 
 std::string AppConfig::texture_path() {
     static std::string texture("resources/png/texture.png");
