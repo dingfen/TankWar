@@ -1,4 +1,5 @@
 #include "tank.h"
+#include "player.h"
 
 void Tank::init() {
     w_ = 32;
@@ -8,6 +9,7 @@ void Tank::init() {
     is_blocked_ = false;
     is_destroyed_ = false;
     is_boom_ = false;
+    is_coming_ = true;
     health_point_ = 20;
     flash_cycle_ = 0;
     texture_off_ = 0;
@@ -60,7 +62,7 @@ void Tank::boom(int d) {
         is_boom_ = true;
 }
 
-bool Tank::is_boom() {
+bool Tank::is_boom() const{
     return is_boom_;
 }
 
@@ -68,12 +70,18 @@ void Tank::draw() {
     Engine *e = Engine::getInstance();
     SDL_Rect srcrect;
     if (is_boom_) {
+        // has been boomed, collision with shell
         type_ = SpriteType::DESTROY_TANK;
         srcrect = e->getSprite(type_, texture_off_);
         w_ = 64;
         h_ = 64;
         e->draw(srcrect, SDL_Rect{x_-16, y_-16, w_, h_});
+    } else if (is_coming_){
+        // cooming soon
+        srcrect = e->getSprite(SpriteType::CREATE, texture_off_);
+        e->draw(srcrect, SDL_Rect{x_, y_, w_, h_});
     } else {
+        // normal condition
         SDL_Rect srcrect = e->getSprite(type_);
         srcrect.x += (int)direction_;
         e->draw(srcrect, SDL_Rect{x_, y_, w_, h_});
@@ -85,7 +93,19 @@ void Tank::draw() {
 }
 
 void Tank::try_update(int dt) {
-    if (!is_boom_) {
+    if (is_boom_) {
+        flash_cycle_ += dt;
+        if (flash_cycle_ > boom_flicker) {
+            texture_off_ ++;
+            flash_cycle_ = 0;
+        }
+    } else if (is_coming_) {
+        flash_cycle_ += dt;
+        if (flash_cycle_ > coming_flicker) {
+            texture_off_ ++;
+            flash_cycle_ = 0;
+        }
+    } else {
         ori_point_ = {x_, y_};
         switch (direction_) {
         case Direction::UP:
@@ -102,12 +122,6 @@ void Tank::try_update(int dt) {
             break;
         default:
             break;
-        }
-    } else {
-        flash_cycle_ += dt;
-        if (flash_cycle_ > tank_flicker) {
-            texture_off_ ++;
-            flash_cycle_ = 0;
         }
     }
     // shell process
@@ -141,12 +155,19 @@ void Tank::do_update() {
             }
         }
     }
-    if (!shell_flying && texture_off_ > 6) {
+    if (is_boom_ && !shell_flying && texture_off_ > 6) {
         destroy();
+    }
+    if (is_coming_ && texture_off_ > 9) {
+        is_coming_ = false;
+        flash_cycle_ = 0;
+        texture_off_ = 0;
     }
 }
 
 void Tank::fire() {
+    if (is_boom_ || is_coming_)
+        return ;
     int i = 0;
     while(i < AppConfig::max_shell) {
         if (!shells_[i]) {

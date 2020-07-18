@@ -49,7 +49,19 @@ void Player::try_update(int dt) {
             is_stop_ = true;
         }
     }
-    if (!is_stop_) {
+    if (is_boom_) {
+        flash_cycle_ += dt;
+        if (flash_cycle_ > boom_flicker) {
+            texture_off_ ++;
+            flash_cycle_ = 0;
+        }
+    } else if (is_coming_) {
+        flash_cycle_ += dt;
+        if (flash_cycle_ > coming_flicker) {
+            texture_off_ ++;
+            flash_cycle_ = 0;
+        }
+    } else if (!is_stop_) {
         ori_point_ = {x_, y_};
         switch (direction_) {
         case Direction::UP:
@@ -81,4 +93,8 @@ void Player::do_update() {
         y_ = ori_point_.y;
     }
     Tank::do_update();
+}
+
+void Player::addscore() {
+    score_ += 100;
 }

@@ -8,6 +8,7 @@ int AppConfig::player_nums = 1;
 const int AppConfig::max_enemy_nums = 4;
 const SDL_Point AppConfig::p1_start_point = {128, 384};
 const SDL_Point AppConfig::p2_start_point = {256, 384};
+const SDL_Point enemy_start_point[3] = {{0, 0},{192, 0},{384, 0}};
 int AppConfig::current_level = 10;
 const int AppConfig::max_shell = 4;
 const int AppConfig::prepare_time = 3000;

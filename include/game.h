@@ -54,6 +54,8 @@ private:
     void init();
     void loadmap();
 
+    // generate enemy tanks
+
     void drawmap();
     void try_update_map(int);
     void do_update_map();
@@ -68,16 +70,16 @@ private:
     // the top collision detect function
     void collision_detect();
     // collision with player and map
-    bool player_map_collision(const unique_ptr<Player>&);
-    // collision with players
-    bool p1_p2_collision();
+    bool tank_map_collision(const Tank *);
+    // collision with tanks
+    bool tank_tank_collision(const Tank *,const Tank *);
 
     // the top booming detect function
     void boom_detect();
     // tank's shell boom the map
-    void shell_map_boom(Tank &);
+    void shell_map_boom(Tank *);
     // tank's shell boom the tank
-    void shell_tank_boom(Tank &, Tank &);
+    void shell_tank_boom(Tank *, Tank *);
 };
 
 #endif // _DF_TANKWAR_GAME_H

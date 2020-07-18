@@ -4,12 +4,14 @@
 #include "water.h"
 #include "bush.h"
 #include "ice.h"
+#include <algorithm>
 #include <fstream>
 
 void Game::init() {
     is_finished_ = false;
     prepare_time_ = AppConfig::prepare_time;
     enemy_num_ = 20;
+    
     if (AppConfig::player_nums == 1) {
         p1.reset(new Player(0, AppConfig::p1_start_point));
         p2.reset();
@@ -17,8 +19,13 @@ void Game::init() {
         p1.reset(new Player(0, AppConfig::p1_start_point));
         p2.reset(new Player(1, AppConfig::p2_start_point));
     }
-    for(int i = 0; i < AppConfig::max_enemy_nums; i++)
+    for(int i = 0; i < AppConfig::max_enemy_nums; i++) {
         enemy_tanks_.push_back(nullptr);
+    }
+
+    for(int i = 0; i < AppConfig::max_enemy_nums; i++) {
+        enemy_tanks_[i].reset(new Enemy(32*i, 0, SpriteType::TANK_A));
+    }
     loadmap();
 }
 
@@ -227,29 +234,56 @@ void Game::do_update_tank() {
     if (p2)
         p2->do_update();
     for(auto &t : enemy_tanks_) {
-        if (t)
-            t->do_update();
+        if (t) {
+            if (t->is_destroy()) {
+                t.reset();
+                t = nullptr;
+            } else {
+                t->do_update();
+            }
+        }
     }
 }
 
 void Game::collision_detect() {
-    bool p1_map = player_map_collision(p1);
-    bool p2_map = p2 ? player_map_collision(p2) : false;
-    bool p1_p2 = p1_p2_collision();
+    vector<bool> p1_blocks(AppConfig::max_enemy_nums, false);
+    vector<bool> p2_blocks(AppConfig::max_enemy_nums, false);
+    bool p1_map = tank_map_collision(p1.get());
+    bool p2_map = p2 ? tank_map_collision(p2.get()) : false;
+    bool p1_p2 = tank_tank_collision(p1.get(), p2.get());
 
-    if(p1_map || p1_p2)  
-        p1->block();
-    else 
-        p1->nonblock();
-    if (p2) {
-        if (p2_map || p1_p2)
-            p2->block();
-        else 
-            p2->nonblock();
+    for(int i = 0; i < AppConfig::max_enemy_nums; i++) {
+        if (enemy_tanks_[i])
+            p1_blocks[i] = tank_tank_collision(p1.get(), enemy_tanks_[i].get());
     }
+    for(int i = 0; i < AppConfig::max_enemy_nums; i++) {
+        if (enemy_tanks_[i])
+            p2_blocks[i] = tank_tank_collision(p2.get(), enemy_tanks_[i].get());
+    }
+    p1_blocks.push_back(p1_map);
+    p1_blocks.push_back(p1_p2);
+
+    p2_blocks.push_back(p2_map);
+    p2_blocks.push_back(p1_p2);
+
+    // if all false in p1 block then p1 can move
+    if(std::all_of(p1_blocks.begin(), p1_blocks.end(), [](bool v) {return !v;}))
+        p1->nonblock();
+    else 
+        p1->block();
+
+    // if all false in p1 block then p1 can move
+    if (p2) {
+        if (std::all_of(p2_blocks.begin(), p2_blocks.end(), [](bool v) {return !v;}))
+            p2->nonblock();
+        else 
+            p2->block();
+    }
+
+    // 
 }
 
-bool Game::player_map_collision(const unique_ptr<Player> &p) {
+bool Game::tank_map_collision(const Tank *p) {
     for(auto &line : map_) {
         for(auto &obj : line) {
             if (obj && !std::dynamic_pointer_cast<Ice>(obj)) {
@@ -266,11 +300,13 @@ bool Game::player_map_collision(const unique_ptr<Player> &p) {
     return false;
 }
 
-bool Game::p1_p2_collision() {
-    if (!p2)
+bool Game::tank_tank_collision(const Tank *pt1, const Tank *pt2) {
+    if (!pt2 || !pt1)
         return false;
-    SDL_Rect pr1 = p1->getRect();
-    SDL_Rect pr2 = p2->getRect();
+    if (pt1->is_boom() || pt2->is_boom())
+        return false;
+    SDL_Rect pr1 = pt1->getRect();
+    SDL_Rect pr2 = pt2->getRect();
     pr1.x += 2; pr1.y += 2; pr1.w -= 4; pr1.h -= 4;
     pr2.x += 2; pr2.y += 2; pr2.w -= 4; pr2.h -= 4;
     if (SDL_HasIntersection(&pr1, &pr2)) {
@@ -280,16 +316,20 @@ bool Game::p1_p2_collision() {
 }
 
 void Game::boom_detect() {
-    shell_map_boom(*p1);
-    // shell_tank_boom(*p1, t_);
+    shell_map_boom(p1.get());
+    for(auto & e : enemy_tanks_)
+        shell_tank_boom(p1.get(), e.get());
     if (p2) {
-        shell_map_boom(*p2);
-        // shell_tank_boom(*p2, t_);
+        shell_map_boom(p2.get());
+        for(auto & e : enemy_tanks_)
+            shell_tank_boom(p2.get(), e.get());
     }
 }
 
-void Game::shell_map_boom(Tank &t) {
-    for(auto &s : t.shells()) {
+void Game::shell_map_boom(Tank *t) {
+    if (!t)
+        return ;
+    for(auto &s : t->shells()) {
         if (s && !s->is_boom()) {
             SDL_Rect sherect = s->getRect();
             for(auto &line : map_) {
@@ -316,16 +356,22 @@ void Game::shell_map_boom(Tank &t) {
     }
 }
 
-void Game::shell_tank_boom(Tank &attacker, Tank & victim) {
-    for(auto &s : attacker.shells()) {
+void Game::shell_tank_boom(Tank *attacker, Tank *victim) {
+    if (!victim || !attacker)
+        return;
+    for(auto &s : attacker->shells()) {
         if (s && !s->is_boom()) {
             SDL_Rect sherect = s->getRect();
-            if (!victim.is_boom()) {
-                SDL_Rect objrect = victim.getRect();
+            if (!victim->is_boom()) {
+                SDL_Rect objrect = victim->getRect();
                 objrect.x += 2; objrect.y += 2; objrect.w -= 4; objrect.h -= 4;
                 if (SDL_HasIntersection(&sherect, &objrect)) {
                     s->boom();
-                    victim.boom(s->damage());
+                    victim->boom(s->damage());
+                    if (dynamic_cast<Enemy*>(victim) && victim->is_boom()) {
+                        enemy_num_--;
+                        dynamic_cast<Player*>(attacker)->addscore();
+                    }
                 }
             }
         }

@@ -18,6 +18,8 @@ public:
     void try_update(int) override;
 
     void do_update() override;
+
+    void addscore();
 private:
     int player_id_;
     int score_;
