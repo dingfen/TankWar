@@ -5,21 +5,25 @@
 #include "bush.h"
 #include "ice.h"
 #include "store.h"
+#include "menu.h"
 #include <algorithm>
 #include <random>
 #include <fstream>
 
-void Game::init() {
-    is_finished_ = false;
+void Game::init(const PlayerData *pd1, const PlayerData *pd2) {
+    is_finished_ = 0;
     prepare_time_ = AppConfig::prepare_time;
+    over_time_ = AppConfig::game_ending_time;
+
     enemy_num_ = 20;
-    
+    enemy_on_map_ = 0;
+
     if (AppConfig::player_nums == 1) {
-        p1.reset(new Player(0, AppConfig::p1_start_point));
+        p1.reset(new Player(0, AppConfig::p1_start_point, *pd1));
         p2.reset();
     } else if (AppConfig::player_nums == 2) {
-        p1.reset(new Player(0, AppConfig::p1_start_point));
-        p2.reset(new Player(1, AppConfig::p2_start_point));
+        p1.reset(new Player(0, AppConfig::p1_start_point, *pd1));
+        p2.reset(new Player(1, AppConfig::p2_start_point, *pd2));
     }
     for(int i = 0; i < AppConfig::max_enemy_nums; i++) {
         enemy_tanks_.push_back(nullptr);
@@ -28,9 +32,9 @@ void Game::init() {
     loadmap();
 }
 
-Game::Game(int stage)
+Game::Game(int stage, const PlayerData *pd1, const PlayerData *pd2)
     : stage_(stage) {
-    init();
+    init(pd1, pd2);
 }
 
 Game::~Game() {
@@ -66,7 +70,7 @@ void Game::update(int dt) {
         if (over_time_ > 0)
             over_time_ -= dt;
         else
-            is_finished_ = true;
+            is_finished_ = 3;
     } else {
         try_update_tank(dt);
         try_update_map(dt);
@@ -84,7 +88,7 @@ void Game::event(SDL_Event *e) {
     if (e->type == SDL_KEYDOWN) {
         switch (e->key.keysym.sym) {
         case SDLK_ESCAPE:
-            is_finished_ = true;
+            is_finished_ = 1;
             break;
         case SDLK_RCTRL:
             p1->fire();
@@ -93,6 +97,9 @@ void Game::event(SDL_Event *e) {
             if(p2)
                 p2->fire();
             break;
+        case SDLK_n:
+            is_finished_ = 3;
+            break;
         default:
             break;
         }
@@ -100,11 +107,28 @@ void Game::event(SDL_Event *e) {
 }
 
 bool Game::finish() {
-    return this->is_finished_;
+    return this->is_finished_!=0;
 }
 
 void Game::nextstate(unique_ptr<AppState>& app_state) {
-    app_state.reset(new Store());
+    switch (is_finished_) {
+        case 1:
+            app_state.reset(new Menu());
+            break;
+        case 2:
+            if (p2)
+                app_state.reset(new Store(--stage_, p1->getdata(), p2->getdata()));
+            else 
+                app_state.reset(new Store(--stage_, p1->getdata()));
+            break;
+        case 3:
+            if (p2)
+                app_state.reset(new Store(stage_, p1->getdata(), p2->getdata()));
+            else 
+                app_state.reset(new Store(stage_, p1->getdata()));
+            break;
+            break;
+    }
 }
 
 void Game::loadmap() {
@@ -112,7 +136,7 @@ void Game::loadmap() {
     fin.open(AppConfig::level_file_path(stage_), std::ios::in);
     if (!fin.is_open()) {
         std::cerr << "Cann't open the map " << stage_ << std::endl;
-        is_finished_ = true;
+        is_finished_ = 1;
         return;
     }
     std::string line;
@@ -211,6 +235,7 @@ void Game::drawstatus() {
     e->draw(srcrect, dstrect);
     e->writeText(SDL_Point{dstrect.x+8, dstrect.y+40}, 
         std::to_string(stage_), SDL_Color{0, 0, 0, 0});
+    // draw player info
 }
 
 void Game::drawtank() {
@@ -230,7 +255,7 @@ void Game::try_update_tank(int dt) {
     for(auto &t : enemy_tanks_) {
         if (t)
             t->try_update(dt);
-        else if (enemy_num_ > 0)
+        else if (enemy_num_ - enemy_on_map_ > 0)
             t = generatenemy();
     }
 }
@@ -274,6 +299,7 @@ shared_ptr<Enemy> Game::generatenemy() {
         pe.reset();
         return nullptr;
     }
+    enemy_on_map_++;
     return pe;
 }
 
@@ -404,6 +430,7 @@ void Game::shell_tank_boom(Tank *attacker, Tank *victim) {
                     // if victim is enemy and it is boomed then add score
                     if (dynamic_cast<Enemy*>(victim) && victim->is_boom()) {
                         enemy_num_--;
+                        enemy_on_map_--;
                         if (auto p = dynamic_cast<Player*>(attacker))
                             p->addscore();
                     }

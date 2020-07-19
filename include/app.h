@@ -5,15 +5,8 @@
 #ifndef _DF_TANKWAR_APP_H
 #define _DF_TANKWAR_APP_H
 
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_image.h>
-#include <SDL2/SDL_ttf.h>
-#include <memory>
 #include "appstate.h"
-
-using std::cerr;
-using std::endl;
-using std::unique_ptr;
+#include "type.h"
 
 class App {
 public:

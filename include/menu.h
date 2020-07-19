@@ -8,6 +8,7 @@
 #define _DF_TANKWAR_MENU_H
 
 #include "appstate.h"
+#include "appconfig.h"
 #include <vector>
 #include <string>
 

@@ -9,7 +9,7 @@
 #include <iostream>
 #include <memory>
 #include "appconfig.h"
-#include "spriteconfig.h"
+#include "type.h"
 #include "exception.h"
 
 class AppState {

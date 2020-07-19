@@ -8,11 +8,13 @@
 #define _DF_TANKWAR_PLAYER_H
 
 #include "tank.h"
+#include "type.h"
+
 
 class Player : public Tank {
 public:
-    Player(int, double x, double y);
-    Player(int, SDL_Point);
+    Player(int, double x, double y, PlayerData);
+    Player(int, SDL_Point, PlayerData);
     ~Player();
 
     void try_update(int) override;
@@ -20,12 +22,11 @@ public:
     void do_update() override;
 
     void addscore();
-private:
-    int player_id_;
-    int score_;
-    bool is_stop_;
 
-    void init();
+    PlayerData* getdata();
+private:
+    PlayerData data_;
+    bool is_stop_;
 };
 
 #endif // _DF_TANKWAR_PLAYER_H

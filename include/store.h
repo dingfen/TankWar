@@ -8,6 +8,7 @@
 #define _DF_TANKWAR_STORE_H
 
 #include "appstate.h"
+#include "player.h"
 #include <vector>
 #include <string>
 
@@ -26,13 +27,22 @@ public:
     bool finish() override;
     // jump to next state
     void nextstate(std::unique_ptr<AppState>&) override;
-    Store();
+    Store(int,const PlayerData*, const PlayerData*p=nullptr);
     ~Store();
 
     static const int line_spacing_ = 32;
 private:
     vector<string> goods_;
     bool is_finished_;
+    int stage_;
+
+    PlayerData pd1;
+    PlayerData pd2;
+    int player_nums;
+
+    int cursor_pos_;
+    int p1_offset_;
+    int p2_offset_;
 
     void show_money(int i, SDL_Rect icon);
     void show_goods(SDL_Rect);

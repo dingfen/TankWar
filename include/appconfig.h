@@ -5,10 +5,7 @@
 #ifndef _DF_TANKWAR_APPCONFIG_H
 #define _DF_TANKWAR_APPCONFIG_H
 
-#include <SDL2/SDL.h>
-#include <iostream>
-#include <vector>
-#include <string>
+#include "type.h"
 
 class AppConfig {
   public:
@@ -17,6 +14,7 @@ class AppConfig {
     static const int max_enemy_nums;
     static const SDL_Point p1_start_point;
     static const SDL_Point p2_start_point;
+    static PlayerData init_player_data(int);
     static SDL_Point enemy_start_point(int);
     static int current_level;
     static const int prepare_time;

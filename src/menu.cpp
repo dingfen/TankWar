@@ -1,17 +1,8 @@
 #include "menu.h"
+#include "type.h"
 #include "configsheet.h"
 #include "engine.h"
 #include "store.h"
-
-Menu::Menu()
-    : items_({"1 Player", "2 Players", "Config & Help", "Exit"}), 
-    pos_y_(ori_pos_y_), is_finished_(false) {
-
-}
-
-Menu::~Menu() {
-
-}
 
 void Menu::draw() {
     Engine *e = Engine::getInstance();
@@ -43,10 +34,14 @@ void Menu::event(SDL_Event *e) {
             case SDLK_UP:
                 if (pos_y_ > ori_pos_y_)
                     pos_y_ -= line_spacing_;
+                else 
+                    pos_y_ = ori_pos_y_ + (items_.size()-1) * line_spacing_;
                 break;
             case SDLK_DOWN:
                 if (pos_y_ < ori_pos_y_ + (items_.size()-1) * line_spacing_)
                     pos_y_ += line_spacing_;
+                else 
+                    pos_y_ = ori_pos_y_;
                 break;
             case SDLK_ESCAPE:
                 break;
@@ -67,13 +62,26 @@ void Menu::nextstate(std::unique_ptr<AppState>& app_state) {
     if (pos_y_ == ori_pos_y_) {
         // 1 Player
         AppConfig::player_nums = 1;
-        app_state.reset(new Store());
+        PlayerData pd1 = AppConfig::init_player_data(0);
+        app_state.reset(new Store(0, &pd1, nullptr));
     } else if (pos_y_ == ori_pos_y_ + line_spacing_) {
         // 2 Players
         AppConfig::player_nums = 2;
-        app_state.reset(new Store());
+        PlayerData pd1 = AppConfig::init_player_data(0);
+        PlayerData pd2 = AppConfig::init_player_data(1);
+        app_state.reset(new Store(0, &pd1, &pd2));
     } else if (pos_y_ == ori_pos_y_ + line_spacing_ * 2) {
         app_state.reset(new ConfigSheet());
     } else
         app_state.reset(nullptr);
+}
+
+Menu::Menu()
+    : items_({"1 Player", "2 Players", "Config & Help", "Exit"}), 
+    pos_y_(ori_pos_y_), is_finished_(false) {
+
+}
+
+Menu::~Menu() {
+
 }

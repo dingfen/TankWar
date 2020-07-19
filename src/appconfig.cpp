@@ -22,6 +22,15 @@ SDL_Rect AppConfig::map_rect = {0, 0, 26*16, 26*16};
 SDL_Rect AppConfig::window_rect = {0, 0, 29*16, 26*16};
 SDL_Rect AppConfig::logo_rect = {20, 20, 406, 72};
 
+PlayerData AppConfig::init_player_data(int id) {
+    PlayerData pd;
+    pd.player_id_ = id;
+    pd.life_count_ = 10;
+    pd.score_ = 0;
+    pd.goods_.clear();
+    return pd;
+}
+
 SDL_Point AppConfig::enemy_start_point(int i) {
     SDL_Point p{192*i, 0};
     return p;

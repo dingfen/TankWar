@@ -1,30 +1,27 @@
 #include "player.h"
 
-void Player::init() {
-    score_ = 0;
-    is_stop_ = false;
+Player::Player(int id, double x, double y, PlayerData pd)
+    : Tank(x, y, id ? SpriteType::PLAYER_2: SpriteType::PLAYER_1),
+    data_(pd) {
 }
 
-Player::Player(int id, double x, double y)
-    : player_id_(id),
-    Tank(x, y, id ? SpriteType::PLAYER_2: SpriteType::PLAYER_1) {
-    init();
-}
-
-Player::Player(int id, SDL_Point point)
-    : player_id_(id),
-    Tank(point, id ? SpriteType::PLAYER_2: SpriteType::PLAYER_1) {
-    init();
+Player::Player(int id, SDL_Point point, PlayerData pd)
+    : Tank(point, id ? SpriteType::PLAYER_2: SpriteType::PLAYER_1),
+    data_(pd) {
 }
 
 Player::~Player() {
 
 }
 
+PlayerData* Player::getdata() {
+    return &data_;
+}
+
 void Player::try_update(int dt) {
     const Uint8 *key_state = SDL_GetKeyboardState(NULL);
     is_stop_ = false;
-    if (player_id_ == 0) {
+    if (data_.player_id_ == 0) {
         if (key_state[SDL_SCANCODE_UP]) {
             direction_ = Direction::UP;
         } else if (key_state[SDL_SCANCODE_DOWN]) {
@@ -96,5 +93,5 @@ void Player::do_update() {
 }
 
 void Player::addscore() {
-    score_ += 100;
+    data_.score_ += 100;
 }

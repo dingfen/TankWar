@@ -7,10 +7,9 @@
 #define _DF_TANKWAR_OBJECT_H
 
 #include "engine.h"
+#include "type.h"
+#include "appconfig.h"
 
-enum class Direction {
-    UP = 0, RIGHT = 32, DOWN = 64, LEFT = 96
-};
 
 class Object {
 public:

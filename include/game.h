@@ -32,10 +32,12 @@ public:
     // jump to next state
     void nextstate(unique_ptr<AppState>&) override;
     
-    Game(int stage);
+    Game(int stage, const PlayerData *p1, const PlayerData *p2=nullptr);
     ~Game();
 private:
-    bool is_finished_;
+    // 0 game playing 1 game exit by escape 
+    // 2 game over  3 game win
+    int is_finished_;
     // game level
     int stage_;
     // game map without bush
@@ -47,13 +49,14 @@ private:
     int over_time_;
     // left enemy number
     int enemy_num_;
+    int enemy_on_map_;
     // players
     unique_ptr<Player> p1;
     unique_ptr<Player> p2;
     // Tank t_;
     vector<shared_ptr<Enemy>> enemy_tanks_;
 
-    void init();
+    void init(const PlayerData *p1, const PlayerData *p2);
     void loadmap();
 
     // generate enemy tanks
