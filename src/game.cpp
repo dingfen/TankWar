@@ -66,11 +66,6 @@ void Game::update(int dt) {
     if (prepare_time_ > 0) {
         prepare_time_ -= dt;
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
-    } else if (enemy_num_ <= 0) {
-        if (over_time_ > 0)
-            over_time_ -= dt;
-        else
-            is_finished_ = 3;
     } else {
         try_update_tank(dt);
         try_update_map(dt);
@@ -80,6 +75,17 @@ void Game::update(int dt) {
         
         do_update_map();
         do_update_tank();
+        if (enemy_num_ <= 0) {
+            if (over_time_ > 0)
+                over_time_ -= dt;
+            else {
+                 // win game bonus
+                p1->addscore();
+                if (p2)
+                    p2->addscore();
+                is_finished_ = 3;
+            }
+        }
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     }
 }
@@ -98,7 +104,7 @@ void Game::event(SDL_Event *e) {
                 p2->fire();
             break;
         case SDLK_n:
-            is_finished_ = 3;
+            is_finished_ = 4;
             break;
         default:
             break;
@@ -306,10 +312,12 @@ shared_ptr<Enemy> Game::generatenemy() {
 void Game::collision_detect() {
     vector<bool> p1_blocks(AppConfig::max_enemy_nums, false);
     vector<bool> p2_blocks(AppConfig::max_enemy_nums, false);
+    // p1 p2 and map collision
     bool p1_map = tank_map_collision(p1.get());
-    bool p2_map = p2 ? tank_map_collision(p2.get()) : false;
+    bool p2_map = tank_map_collision(p2.get());
     bool p1_p2 = tank_tank_collision(p1.get(), p2.get());
 
+    // p1 p2 and enemy tank collision
     for(int i = 0; i < AppConfig::max_enemy_nums; i++) {
         if (enemy_tanks_[i])
             p1_blocks[i] = tank_tank_collision(p1.get(), enemy_tanks_[i].get());
@@ -339,9 +347,26 @@ void Game::collision_detect() {
     }
 
     // if get blocked enemy tank can't move too
+    for(int i = 0; i < AppConfig::max_enemy_nums; i++) {
+        if (enemy_tanks_[i] == nullptr)
+            continue;
+        vector<bool> tank_blocks;
+        for(int j = 0; j < AppConfig::max_enemy_nums && i != j; j++) {
+            tank_blocks.push_back(tank_tank_collision(enemy_tanks_[i].get(), enemy_tanks_[j].get()));
+        }
+        tank_blocks.push_back(tank_map_collision(enemy_tanks_[i].get()));
+        tank_blocks.push_back(p1_blocks[i]);
+        tank_blocks.push_back(p2_blocks[i]);
+        if(std::all_of(tank_blocks.begin(), tank_blocks.end(), [](bool v) {return !v;}))
+            enemy_tanks_[i]->nonblock();
+        else 
+            enemy_tanks_[i]->block();
+    }
 }
 
 bool Game::tank_map_collision(const Tank *p) {
+    if (!p)
+        return false;
     for(auto &line : map_) {
         for(auto &obj : line) {
             if (obj && !std::dynamic_pointer_cast<Ice>(obj)) {

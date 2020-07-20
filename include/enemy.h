@@ -15,13 +15,16 @@ public:
 
     // void draw() override;
 
-    // void try_update(int) override;
+    void try_update(int) override;
 
     // void do_update() override;
 
-    // virtual void fire();
+    // count time to fire
+    void fire(int);
 private:
-    
+    int refire_time_;
+    int moving_time_;
+    void init();
 };
 
 #endif // _DF_TANKWAR_ENEMY_H

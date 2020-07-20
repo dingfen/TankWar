@@ -36,7 +36,7 @@ public:
     ~Game();
 private:
     // 0 game playing 1 game exit by escape 
-    // 2 game over  3 game win
+    // 2 game lose  3 game win 4 game skip
     int is_finished_;
     // game level
     int stage_;

@@ -6,7 +6,6 @@
 #define _DF_TANKWAR_APP_H
 
 #include "appstate.h"
-#include "type.h"
 
 class App {
 public:
