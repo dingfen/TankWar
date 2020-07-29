@@ -10,7 +10,7 @@ void Tank::init() {
     is_destroyed_ = false;
     is_boom_ = false;
     is_coming_ = true;
-    health_point_ = 20;
+    health_point_ = AppConfig::tank_hp;
     level_ = 0;
     flash_cycle_ = 0;
     texture_off_ = 0;

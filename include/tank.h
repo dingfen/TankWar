@@ -27,7 +27,7 @@ public:
     bool is_destroy() override;
     void destroy();
     bool is_boom() const;
-    void boom(int);
+    virtual void boom(int);
     bool is_coming() const;
 
     void setdirection(Direction);

@@ -268,7 +268,13 @@ void Game::drawstatus() {
     e->draw(srcrect, dstrect);
     e->writeText(SDL_Point{dstrect.x+20, dstrect.y}, 
         std::to_string(pd->life_count_), {0, 0, 0, 0}, 12);
-    
+    dstrect.y += 24;
+    dstrect.w = 50;
+    dstrect.h = 10;
+    e->drawRect(dstrect, {0, 0, 0, 0});
+    dstrect.w = 50 * (pd->health_point_) / AppConfig::player_hp;
+    e->drawRect(dstrect, {0, 255, 0, 0});
+
     // draw player info p2
     if (p2) {
         srcrect = e->getSprite(SpriteType::FLAG, 1);
@@ -279,6 +285,12 @@ void Game::drawstatus() {
         e->draw(srcrect, dstrect);
         e->writeText(SDL_Point{dstrect.x+20, dstrect.y}, 
             std::to_string(pd2->life_count_), {0, 0, 0, 0}, 12);
+            dstrect.y += 24;
+        dstrect.w = 50;
+        dstrect.h = 10;
+        e->drawRect(dstrect, {0, 0, 0, 0});
+        dstrect.w = 50 * (pd2->health_point_) / AppConfig::player_hp;
+        e->drawRect(dstrect, {0, 255, 0, 0});
     }
 }
 

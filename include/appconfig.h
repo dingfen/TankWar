@@ -25,6 +25,11 @@ class AppConfig {
     static const double shell_speed;
     static const int max_shell;
     static const int shell_damage;
+    static const int tank_hp;
+    static const int eagle_hp;
+    static const int player_hp;
+    static const int brick_hp;
+    static const int stone_hp;
     
     // file data
     static std::string level_file_path(int);

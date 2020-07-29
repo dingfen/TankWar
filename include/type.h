@@ -28,6 +28,7 @@ struct PlayerData
     int player_id_;
     int score_;
     int life_count_;
+    int health_point_;
     vector<shared_ptr<Object>> goods_;
 };
 

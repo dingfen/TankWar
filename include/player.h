@@ -26,6 +26,8 @@ public:
     // @return whether player's lifes to zero
     bool respawn();
 
+    void boom(int) override;
+
     PlayerData* getdata();
 private:
     PlayerData data_;

@@ -2,21 +2,21 @@
 
 Eagle::Eagle()
     : Object(12 * AppConfig::tile_w, 24 * AppConfig::tile_h, SpriteType::EAGLE),
-    is_destroyed_(false), health_point_(10) {
+    is_destroyed_(false), health_point_(AppConfig::eagle_hp) {
     w_ = 32;
     h_ = 32;
 }
 
 Eagle::Eagle(double x, double y)
     : Object(x, y, SpriteType::EAGLE),
-    is_destroyed_(false), health_point_(10) {
+    is_destroyed_(false), health_point_(AppConfig::eagle_hp) {
     w_ = 32;
     h_ = 32;
 }
 
 Eagle::Eagle(SDL_Point p)
     : Object(p, SpriteType::EAGLE),
-    is_destroyed_(false), health_point_(10) {
+    is_destroyed_(false), health_point_(AppConfig::eagle_hp) {
     w_ = 32;
     h_ = 32;
 }

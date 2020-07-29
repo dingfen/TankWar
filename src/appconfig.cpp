@@ -17,6 +17,12 @@ const int AppConfig::tile_w = 16;
 const int AppConfig::shell_damage = 25;
 const double AppConfig::tank_speed = 0.08;
 const double AppConfig::shell_speed = 0.23;
+const int AppConfig::tank_hp = 20;
+const int AppConfig::eagle_hp = 10;
+const int AppConfig::brick_hp = 10;
+const int AppConfig::stone_hp = 100;
+const int AppConfig::player_hp = 30;
+
 SDL_Rect AppConfig::status_rect = {26*16, 0, 3*16, 26*16};
 SDL_Rect AppConfig::map_rect = {0, 0, 26*16, 26*16};
 SDL_Rect AppConfig::window_rect = {0, 0, 29*16, 26*16};
@@ -25,7 +31,8 @@ SDL_Rect AppConfig::logo_rect = {20, 20, 406, 72};
 PlayerData AppConfig::init_player_data(int id) {
     PlayerData pd;
     pd.player_id_ = id;
-    pd.life_count_ = 10;
+    pd.life_count_ = 5;
+    pd.health_point_ = AppConfig::player_hp;
     pd.score_ = 0;
     pd.goods_.clear();
     return pd;
