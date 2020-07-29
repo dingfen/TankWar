@@ -12,6 +12,7 @@
 #include "bush.h"
 #include "player.h"
 #include "enemy.h"
+#include "eagle.h"
 #include <iostream>
 
 using std::vector;
@@ -53,6 +54,7 @@ private:
     // players
     unique_ptr<Player> p1;
     unique_ptr<Player> p2;
+    bool hq_destroyed_;
     // Tank t_;
     vector<shared_ptr<Enemy>> enemy_tanks_;
 

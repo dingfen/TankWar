@@ -14,6 +14,7 @@ void Game::init(const PlayerData *pd1, const PlayerData *pd2) {
     is_finished_ = 0;
     prepare_time_ = AppConfig::prepare_time;
     over_time_ = AppConfig::game_ending_time;
+    hq_destroyed_ = false;
 
     enemy_num_ = 20;
     enemy_on_map_ = 0;
@@ -28,7 +29,6 @@ void Game::init(const PlayerData *pd1, const PlayerData *pd2) {
     for(int i = 0; i < AppConfig::max_enemy_nums; i++) {
         enemy_tanks_.push_back(nullptr);
     }
-
     loadmap();
 }
 
@@ -66,21 +66,28 @@ void Game::update(int dt) {
     if (prepare_time_ > 0) {
         prepare_time_ -= dt;
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
-    } else if (enemy_num_ <= 0) {
+    } else { 
+    if (enemy_num_ <= 0) {
         if (over_time_ > 0)
             over_time_ -= dt;
         else
             is_finished_ = 3;
-    } else {
-        try_update_tank(dt);
-        try_update_map(dt);
+    }
+    if(hq_destroyed_) {
+        if (over_time_ > 0)
+            over_time_ -= dt;
+        else
+            is_finished_ = 2;
+    }
+    try_update_tank(dt);
+    try_update_map(dt);
 
-        boom_detect();
-        collision_detect();
-        
-        do_update_map();
-        do_update_tank();
-        SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
+    boom_detect();
+    collision_detect();
+    
+    do_update_map();
+    do_update_tank();
+    SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     }
 }
 
@@ -113,13 +120,9 @@ bool Game::finish() {
 void Game::nextstate(unique_ptr<AppState>& app_state) {
     switch (is_finished_) {
         case 1:
-            app_state.reset(new Menu());
-            break;
         case 2:
-            if (p2)
-                app_state.reset(new Store(--stage_, p1->getdata(), p2->getdata()));
-            else 
-                app_state.reset(new Store(--stage_, p1->getdata()));
+            AppConfig::current_level = 1;
+            app_state.reset(new Menu());
             break;
         case 3:
             if (p2)
@@ -172,6 +175,8 @@ void Game::loadmap() {
         this->map_.push_back(row);
         j++;
     }
+    // load headquaters
+    map_[0].push_back(shared_ptr<Object>(new Eagle()));
 }
 
 void Game::drawmap() {
@@ -200,7 +205,8 @@ void Game::do_update_map() {
     for(int i = 0; i < map_.size(); i++)
         for(int j = 0; j < map_[i].size(); j++) {
             if (map_[i][j]) {
-                if (map_[i][j]->is_destroy()) {
+                if (map_[i][j]->is_destroy() 
+                    && !std::dynamic_pointer_cast<Eagle>(map_[i][j])) {
                     map_[i][j].reset();
                     map_[i][j] = nullptr;
                 } else {
@@ -405,6 +411,15 @@ void Game::shell_map_boom(Tank *t) {
                             if (SDL_HasIntersection(&sherect, &objrect)) {
                                 s->boom();
                                 p->boom(s->damage());
+                            }
+                        }
+                        else if(auto p = std::dynamic_pointer_cast<Eagle>(obj)) {
+                            SDL_Rect objrect = obj->getRect();
+                            if (SDL_HasIntersection(&sherect, &objrect)) {
+                                s->boom();
+                                p->boom(s->damage());
+                                if(p->is_destroy())
+                                    hq_destroyed_ = true;
                             }
                         }
                     }

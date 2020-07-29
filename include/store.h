@@ -33,7 +33,7 @@ public:
     static const int line_spacing_ = 32;
 private:
     vector<string> goods_;
-    bool is_finished_;
+    int is_finished_;
     int stage_;
 
     PlayerData pd1;

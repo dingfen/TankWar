@@ -74,7 +74,7 @@ void Store::update(int dt) {
 }
 
 bool Store::finish() {
-    return is_finished_;
+    return is_finished_!=0;
 }
 
 void Store::event(SDL_Event *e) {
@@ -107,7 +107,10 @@ void Store::event(SDL_Event *e) {
         case SDLK_SPACE:
             break;
         case SDLK_RETURN:
-            is_finished_ = true;
+            is_finished_ = 1;
+            break;
+        case SDLK_ESCAPE:
+            is_finished_ = 2;
             break;
         default:
             break;
@@ -121,7 +124,7 @@ Store::Store(int stage, const PlayerData *p1, const PlayerData *p2)
     "Deep Damage * 1",
     "More Shield time * 1",
     "Less Enemy * 1"}),
-    is_finished_(false), stage_(stage) {
+    is_finished_(0), stage_(stage) {
     player_nums = AppConfig::player_nums;
     cursor_pos_ = 170;
     p1_offset_ = 0;
@@ -139,7 +142,7 @@ Store::~Store() {
 }
 
 void Store::nextstate(std::unique_ptr<AppState>& app_state) {
-    if (AppConfig::current_level > 35) {
+    if (AppConfig::current_level > 35 || is_finished_ == 2) {
         app_state.reset(new Menu());
     } else {
         if (player_nums > 1)

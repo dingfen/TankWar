@@ -72,8 +72,7 @@ void Menu::nextstate(std::unique_ptr<AppState>& app_state) {
         app_state.reset(new Store(0, &pd1, &pd2));
     } else if (pos_y_ == ori_pos_y_ + line_spacing_ * 2) {
         app_state.reset(new ConfigSheet());
-    } else
-        app_state.reset(nullptr);
+    }
 }
 
 Menu::Menu()
