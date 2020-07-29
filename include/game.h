@@ -93,6 +93,8 @@ private:
     void shell_map_boom(Tank *);
     // tank's shell boom the tank
     void shell_tank_boom(Tank *, Tank *);
+    // enemy shell with our shell boom
+    void shell_shell_boom(Tank *, Tank *);
 };
 
 #endif // _DF_TANKWAR_GAME_H

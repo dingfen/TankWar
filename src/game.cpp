@@ -410,10 +410,10 @@ void Game::collision_detect() {
         if (enemy_tanks_[i] == nullptr)
             continue;
         vector<bool> tank_blocks;
+        tank_blocks.push_back(tank_map_collision(enemy_tanks_[i].get()));
         for(int j = 0; j < AppConfig::max_enemy_nums && i != j; j++) {
             tank_blocks.push_back(tank_tank_collision(enemy_tanks_[i].get(), enemy_tanks_[j].get()));
         }
-        tank_blocks.push_back(tank_map_collision(enemy_tanks_[i].get()));
         tank_blocks.push_back(p1_blocks[i]);
         tank_blocks.push_back(p2_blocks[i]);
         if(std::all_of(tank_blocks.begin(), tank_blocks.end(), [](bool v) {return !v;}))
@@ -472,6 +472,12 @@ void Game::boom_detect() {
         shell_tank_boom(e.get(), p1.get());
         if (p2)
             shell_tank_boom(e.get(), p2.get());
+    }
+
+    // shell with shell boom
+    for(auto &e : enemy_tanks_) {
+        shell_shell_boom(p1.get(), e.get());
+        shell_shell_boom(p2.get(), e.get());
     }
 }
 
@@ -533,6 +539,25 @@ void Game::shell_tank_boom(Tank *attacker, Tank *victim) {
                         enemy_on_map_--;
                         if (auto p = dynamic_cast<Player*>(attacker))
                             p->addscore();
+                    }
+                }
+            }
+        }
+    }
+}
+
+void Game::shell_shell_boom(Tank *us, Tank *en) {
+    if (!us || !en)
+        return ;
+    for(auto &s : us->shells()) {
+        if (s && !s->is_boom()) {
+            SDL_Rect srect = s->getRect();
+            for(auto &b : en->shells()) {
+                if (b && !b->is_boom()) {
+                    SDL_Rect brect = b->getRect();
+                    if (SDL_HasIntersection(&srect, &brect)) {
+                        s->boom();
+                        b->boom();
                     }
                 }
             }

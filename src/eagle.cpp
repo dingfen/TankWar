@@ -32,8 +32,11 @@ void Eagle::draw() {
 }
 
 void Eagle::boom(int d) {
-    if (health_point_ <= d)
+    health_point_ -= d;
+    if (health_point_ <= 0) {
         is_destroyed_ = true;
+        health_point_ = 0;
+    }
 }
 
 bool Eagle::is_destroy() {

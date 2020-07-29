@@ -16,8 +16,11 @@ Brick::~Brick() {
 }
 
 void Brick::boom(int d) {
-    if (health_point_ <= d)
+    health_point_ -= d;
+    if (health_point_ <= 0) {
         is_destroyed_ = true;
+        health_point_ = 0;
+    }
 }
 
 bool Brick::is_destroy() {

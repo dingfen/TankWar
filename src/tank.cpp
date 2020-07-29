@@ -59,8 +59,10 @@ bool Tank::is_destroy() {
 
 void Tank::boom(int d) {
     health_point_ -= d;
-    if (health_point_ <= 0)
+    if (health_point_ <= 0) {
         is_boom_ = true;
+        health_point_ = 0;
+    }
 }
 
 bool Tank::is_boom() const{

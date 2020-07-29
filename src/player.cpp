@@ -20,8 +20,10 @@ PlayerData* Player::getdata() {
 
 void Player::boom(int d) {
     data_.health_point_ -= d;
-    if (data_.health_point_ <= 0)
+    if (data_.health_point_ <= 0) {
         is_boom_ = true;
+        data_.health_point_ = 0;
+    }
 }
 
 void Player::try_update(int dt) {
@@ -103,9 +105,9 @@ void Player::addscore() {
 }
 
 bool Player::respawn() {
-    data_.life_count_--;
-    if (data_.life_count_ <= 0)
-        return true;
+    if (data_.life_count_ > 0)
+        data_.life_count_ --;
+    else return true;
     data_.health_point_ = AppConfig::player_hp;
     if (data_.player_id_) {
         x_ = AppConfig::p2_start_point.x;
