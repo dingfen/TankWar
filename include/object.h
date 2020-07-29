@@ -7,7 +7,6 @@
 #define _DF_TANKWAR_OBJECT_H
 
 #include "engine.h"
-#include "type.h"
 #include "appconfig.h"
 
 
