@@ -95,3 +95,20 @@ void Player::do_update() {
 void Player::addscore() {
     data_.score_ += 100;
 }
+
+bool Player::respawn() {
+    data_.life_count_--;
+    if (data_.life_count_ <= 0)
+        return true;
+    if (data_.player_id_) {
+        x_ = AppConfig::p2_start_point.x;
+        y_ = AppConfig::p2_start_point.y;
+        type_ = SpriteType::PLAYER_2;
+    } else {
+        x_ = AppConfig::p1_start_point.x;
+        y_ = AppConfig::p1_start_point.y;
+        type_ = SpriteType::PLAYER_1;
+    }
+    Tank::init();
+    return false;
+}

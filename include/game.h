@@ -54,9 +54,14 @@ private:
     // players
     unique_ptr<Player> p1;
     unique_ptr<Player> p2;
+    bool p1_over_;
+    bool p2_over_;
     bool hq_destroyed_;
     // Tank t_;
     vector<shared_ptr<Enemy>> enemy_tanks_;
+
+    //miscellaneous
+    double game_over_y_pos_;
 
     void init(const PlayerData *p1, const PlayerData *p2);
     void loadmap();

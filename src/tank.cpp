@@ -11,6 +11,7 @@ void Tank::init() {
     is_boom_ = false;
     is_coming_ = true;
     health_point_ = 20;
+    level_ = 0;
     flash_cycle_ = 0;
     texture_off_ = 0;
     ori_point_ = {x_, y_};
@@ -86,7 +87,7 @@ void Tank::draw() {
         e->draw(srcrect, SDL_Rect{x_, y_, w_, h_});
     } else {
         // normal condition
-        SDL_Rect srcrect = e->getSprite(type_);
+        SDL_Rect srcrect = e->getSprite(type_, 0, level_);
         srcrect.x += (int)direction_;
         e->draw(srcrect, SDL_Rect{x_, y_, w_, h_});
     }

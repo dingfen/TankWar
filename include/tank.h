@@ -43,6 +43,7 @@ protected:
     Direction direction_;
     SDL_Point ori_point_;
     double speed_;
+    int level_;
     
     bool is_destroyed_;
     bool is_boom_;

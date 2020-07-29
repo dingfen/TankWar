@@ -15,13 +15,18 @@ void Game::init(const PlayerData *pd1, const PlayerData *pd2) {
     prepare_time_ = AppConfig::prepare_time;
     over_time_ = AppConfig::game_ending_time;
     hq_destroyed_ = false;
+    p1_over_ = false;
+    p2_over_ = false;
 
     enemy_num_ = 20;
     enemy_on_map_ = 0;
 
+    game_over_y_pos_ = AppConfig::window_rect.h;
+
     if (AppConfig::player_nums == 1) {
         p1.reset(new Player(0, AppConfig::p1_start_point, *pd1));
         p2.reset();
+        p2_over_ = true;
     } else if (AppConfig::player_nums == 2) {
         p1.reset(new Player(0, AppConfig::p1_start_point, *pd1));
         p2.reset(new Player(1, AppConfig::p2_start_point, *pd2));
@@ -59,6 +64,10 @@ void Game::draw() {
     drawtank();
     
     drawbush();
+
+    if (hq_destroyed_ || (p1_over_ && p2_over_)) {
+        e->writeText(SDL_Point{-1, game_over_y_pos_}, "Game Over", SDL_Color{255, 10, 10, 255}, 24);
+    }
     e->update();
 }
 
@@ -68,8 +77,9 @@ void Game::update(int dt) {
         SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     } else { 
     if (enemy_num_ <= 0) {
-        if (over_time_ > 0)
+        if (over_time_ > 0) {
             over_time_ -= dt;
+        }
         else {
             is_finished_ = 3;
             // win game bonus
@@ -78,9 +88,11 @@ void Game::update(int dt) {
                 p2->addscore();
         }
     }
-    if(hq_destroyed_) {
-        if (over_time_ > 0)
+    if(hq_destroyed_ || (p1_over_ && p2_over_)) {
+        if (over_time_ > 0) {
             over_time_ -= dt;
+            game_over_y_pos_ -= dt * AppConfig::shell_speed;
+        }
         else
             is_finished_ = 2;
     }
@@ -246,7 +258,28 @@ void Game::drawstatus() {
     e->draw(srcrect, dstrect);
     e->writeText(SDL_Point{dstrect.x+8, dstrect.y+40}, 
         std::to_string(stage_), SDL_Color{0, 0, 0, 0});
-    // draw player info
+    // draw player info p1
+    srcrect = e->getSprite(SpriteType::FLAG);
+    const PlayerData* pd = p1->getdata();
+    dstrect.x = AppConfig::status_rect.x + 4;
+    dstrect.y = 250;
+    dstrect.w = 16;
+    dstrect.h = 16;
+    e->draw(srcrect, dstrect);
+    e->writeText(SDL_Point{dstrect.x+20, dstrect.y}, 
+        std::to_string(pd->life_count_), {0, 0, 0, 0}, 12);
+    
+    // draw player info p2
+    if (p2) {
+        srcrect = e->getSprite(SpriteType::FLAG, 1);
+        const PlayerData* pd2 = p2->getdata();
+        dstrect.y = 300;
+        dstrect.w = 16;
+        dstrect.h = 16;
+        e->draw(srcrect, dstrect);
+        e->writeText(SDL_Point{dstrect.x+20, dstrect.y}, 
+            std::to_string(pd2->life_count_), {0, 0, 0, 0}, 12);
+    }
 }
 
 void Game::drawtank() {
@@ -272,9 +305,17 @@ void Game::try_update_tank(int dt) {
 }
 
 void Game::do_update_tank() {
-    p1->do_update();
+    if (p1->is_destroy())
+        p1_over_ = p1->respawn();
+    else 
+        p1->do_update();
+
     if (p2)
-        p2->do_update();
+        if (p2->is_destroy())
+            p2_over_ = p2->respawn();
+        else 
+            p2->do_update();
+    
     for(auto &t : enemy_tanks_) {
         if (t) {
             if (t->is_destroy()) {
@@ -293,7 +334,8 @@ shared_ptr<Enemy> Game::generatenemy() {
     int t = rand() % 4;
     SDL_Point pos = AppConfig::enemy_start_point(i);
     SpriteType type = (SpriteType)t;
-    shared_ptr<Enemy> pe(new Enemy(pos, type));
+    int level = rand() % 5 -1;
+    shared_ptr<Enemy> pe(new Enemy(pos, type, level));
 
     // check if there has enough space
     for(auto &other : enemy_tanks_) {
@@ -411,6 +453,13 @@ void Game::boom_detect() {
         shell_map_boom(p2.get());
         for(auto & e : enemy_tanks_)
             shell_tank_boom(p2.get(), e.get());
+    }
+
+    for(auto & e: enemy_tanks_) {
+        shell_map_boom(e.get());
+        shell_tank_boom(e.get(), p1.get());
+        if (p2)
+            shell_tank_boom(e.get(), p2.get());
     }
 }
 

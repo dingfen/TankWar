@@ -9,8 +9,8 @@
 
 class Enemy : public Tank {
 public:
-    Enemy(double x, double y, SpriteType);
-    Enemy(SDL_Point, SpriteType);
+    Enemy(double x, double y, SpriteType, int);
+    Enemy(SDL_Point, SpriteType, int);
     ~Enemy();
 
     // void draw() override;
@@ -24,7 +24,7 @@ public:
 private:
     int refire_time_;
     int moving_time_;
-    void init();
+    void init(int);
 };
 
 #endif // _DF_TANKWAR_ENEMY_H

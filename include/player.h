@@ -23,6 +23,9 @@ public:
 
     void addscore();
 
+    // @return whether player's lifes to zero
+    bool respawn();
+
     PlayerData* getdata();
 private:
     PlayerData data_;

@@ -42,7 +42,7 @@ void SpriteConfig::init() {
 
     configs_[SpriteType::EAGLE] = SpriteData(944, 0, 32, 32);
     configs_[SpriteType::DESTROY_EAGLE] = SpriteData(1040, 0, 64, 64);
-    configs_[SpriteType::FLAG] = SpriteData(944, 32, 32, 32);
+    configs_[SpriteType::FLAG] = SpriteData(944, 64, 16, 16);
     configs_[SpriteType::BULLET] = SpriteData(944, 128, 8, 8);
 
     configs_[SpriteType::LEFT_ENEMY] = SpriteData(944, 144, 16, 16);
