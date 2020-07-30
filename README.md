@@ -86,8 +86,8 @@ In coming ...
  - ![Bonus clock](resources/img/bonus_clock.png) Clock: freeze all enemies for 8 seconds
  - ![Bonus shovel](resources/img/bonus_shovel.png) Shovel: create stone wall around eagle for 15 seconds
  - ![Bonus tank](resources/img/bonus_tank.png) Tank: increase player lives count 
- - ![Bonus star](resources/img/bonus_star.png) Star: increase player speed, each next one increase max bullets count
- - ![Bonus gun](resources/img/bonus_gun.png) Gun: same as three starts
+ - ![Bonus star](resources/img/bonus_star.png) Star: increase player speed, each next one increase max shells count
+ - ![Bonus gun](resources/img/bonus_gun.png) Gun: increase shells damage
  - ![Bonus boat](resources/img/bonus_boat.png) Boat: allows to move on the water
 
 ### maps

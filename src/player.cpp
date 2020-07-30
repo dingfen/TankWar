@@ -5,6 +5,11 @@ void Player::init(int id) {
         data_ = &AppConfig::p2_data;
     else 
         data_ = &AppConfig::p1_data;
+    shells_.clear();
+    for(int i = 0; i < data_->max_shell_; i++) {
+        shells_.push_back(nullptr);
+    }
+    speed_ = data_->player_speed_;
 }
 
 Player::Player(int id, double x, double y)

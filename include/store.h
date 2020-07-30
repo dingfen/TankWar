@@ -43,6 +43,9 @@ private:
     int cursor_pos_;
     int p1_offset_;
     int p2_offset_;
+    int tip_time_;
+    bool nomore_score_1;
+    bool nomore_score_2;
 
     void show_money(int i, SDL_Rect icon);
     void show_goods(SDL_Rect);

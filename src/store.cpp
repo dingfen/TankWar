@@ -17,14 +17,17 @@ void Store::show_money(int i, SDL_Rect rbase) {
     SDL_Rect player;
     std::string score;
     std::string life;
+    bool nomore_score;
     if (i == 0) {
         player = e->getSprite(SpriteType::PLAYER_1);
         score = std::to_string(pd1->score_) + " $ ";
         life = "x "+ std::to_string(pd1->life_count_);
+        nomore_score = nomore_score_1;
     } else {
         player = e->getSprite(SpriteType::PLAYER_2);
         score = std::to_string(pd2->score_) + " $ ";
         life = "x " + std::to_string(pd2->life_count_);
+        nomore_score = nomore_score_2;
     }
     rbase.y += i * 40;
     e->draw(player, rbase);
@@ -33,7 +36,10 @@ void Store::show_money(int i, SDL_Rect rbase) {
     p.y = rbase.y + 10;
     e->writeText(p, life, SDL_Color{0xf0, 0xff, 0xf0, 0});
     p.x = rbase.x + 150;
-    e->writeText(p, score, SDL_Color{0xff, 200, 0, 0});
+    SDL_Color c = {0xff, 200, 0, 0};
+    if(nomore_score)
+        c = {0xff, 0, 0, 0};
+    e->writeText(p, score, c);
 }
 
 void Store::draw() {
@@ -61,10 +67,10 @@ void Store::draw() {
     // load goods_
     for(int i = 0; i < goods_.size(); i++) {
         e->writeText(SDL_Point{60, cursor_pos_+i*line_spacing_}, goods_[i].first,
-            {255, 255, 255, 0}, 14, 0);
+            {255, 255, 255, 0}, 14, 1);
         string price = std::to_string(goods_[i].second) + " $";
         e->writeText(SDL_Point{300, cursor_pos_+i*line_spacing_}, 
-            price, {255, 255, 255, 0}, 14, 0);
+            price, {255, 255, 255, 0}, 14, 1);
     }
     // write tips
     e->writeText(SDL_Point{30, 400}, "Fire to Buy", 
@@ -75,6 +81,20 @@ void Store::draw() {
 }
 
 void Store::update(int dt) {
+    if (nomore_score_1) {
+        tip_time_ -= dt;
+        if (tip_time_ <= 0) {
+            tip_time_ = 200;
+            nomore_score_1 = false;
+        }
+    }
+    if (nomore_score_2) {
+        tip_time_ -= dt;
+        if (tip_time_ <= 0) {
+            tip_time_ = 200;
+            nomore_score_2 = false;
+        }
+    }
     // SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
 }
 
@@ -142,6 +162,9 @@ Store::Store(int stage)
     cursor_pos_ = 170;
     p1_offset_ = 0;
     p2_offset_ = 0;
+    tip_time_ = 200;
+    nomore_score_1 = false;
+    nomore_score_2 = false;
     pd1 = &AppConfig::p1_data;
     pd2 = &AppConfig::p2_data;
 }
@@ -159,5 +182,12 @@ void Store::nextstate(std::unique_ptr<AppState>& app_state) {
 }
 
 void Store::buy(int id) {
-
+    PlayerData *p = const_cast<PlayerData*>(id ? pd2 : pd1);
+    int off = id ? p2_offset_ : p1_offset_;
+    bool *tip = id ? &nomore_score_2 : &nomore_score_1;
+    if (p->score_ >= goods_[off].second) {
+        p->score_ -= goods_[off].second;
+    } else {
+        *tip = true;
+    }
 }

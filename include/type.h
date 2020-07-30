@@ -27,6 +27,8 @@ struct PlayerData
 {
     int player_id_;
     int score_;
+    int max_shell_;
+    int player_speed_;
     int life_count_;
     int health_point_;
     int sum_hp_;
@@ -35,6 +37,7 @@ struct PlayerData
     PlayerData(int id) {
         player_id_ = id;
         life_count_ = 5;
+        max_shell_ = 4;
         health_point_ = 30;
         sum_hp_ = 30;
         score_ = 0;

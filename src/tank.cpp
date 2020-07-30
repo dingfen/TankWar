@@ -175,9 +175,9 @@ void Tank::do_update() {
 void Tank::fire() {
     if (is_boom_ || is_coming_)
         return ;
-    int i = 0;
-    while(i < AppConfig::max_shell) {
-        if (!shells_[i]) {
+
+    for(auto &s : shells_) {
+        if (!s) {
             double x, y;
             switch(direction_) {
                 case Direction::UP:
@@ -197,10 +197,9 @@ void Tank::fire() {
                     y = y_ + (h_ - 8)/2;
                     break;
             }
-            shells_[i].reset(new Shell(x, y, direction_));
+            s.reset(new Shell(x, y, direction_));
             break;
         }
-        i++;
     }
 }
 
