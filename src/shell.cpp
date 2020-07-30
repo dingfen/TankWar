@@ -30,6 +30,10 @@ int Shell::damage() {
     return damage_;
 }
 
+Direction Shell::getdirection() {
+    return direction_;
+}
+
 void Shell::draw() {
     Engine *e = Engine::getInstance();
     SDL_Rect objrect;

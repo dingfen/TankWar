@@ -411,7 +411,8 @@ void Game::collision_detect() {
             continue;
         vector<bool> tank_blocks;
         tank_blocks.push_back(tank_map_collision(enemy_tanks_[i].get()));
-        for(int j = 0; j < AppConfig::max_enemy_nums && i != j; j++) {
+        for(int j = 0; j < AppConfig::max_enemy_nums; j++) {
+            if (i == j) continue;
             tank_blocks.push_back(tank_tank_collision(enemy_tanks_[i].get(), enemy_tanks_[j].get()));
         }
         tank_blocks.push_back(p1_blocks[i]);
@@ -494,7 +495,7 @@ void Game::shell_map_boom(Tank *t) {
                             SDL_Rect objrect = obj->getRect();
                             if (SDL_HasIntersection(&sherect, &objrect)) {
                                 s->boom();
-                                p->boom(s->damage());
+                                p->boom(s.get());
                             }
                         }
                         else if(auto p = std::dynamic_pointer_cast<Stone>(obj)) {

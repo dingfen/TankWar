@@ -25,6 +25,7 @@ public:
     bool is_boom();
     void boom();
     int damage();
+    Direction getdirection();
 
     static const int shell_flicker = 50;
 private:
