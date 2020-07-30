@@ -81,6 +81,15 @@ According to Tank 1990 and [krystiankaluzny/Tanks](https://github.com/krystianka
 
 In coming ...
 
+ - ![Bonus grenade](resources/img/bonus_grenade.png) Grenade: all enemies are destroyed
+ - ![Bonus helmet](resources/img/bonus_helmet.png) Helmet: active player shield for 10 seconds
+ - ![Bonus clock](resources/img/bonus_clock.png) Clock: freeze all enemies for 8 seconds
+ - ![Bonus shovel](resources/img/bonus_shovel.png) Shovel: create stone wall around eagle for 15 seconds
+ - ![Bonus tank](resources/img/bonus_tank.png) Tank: increase player lives count 
+ - ![Bonus star](resources/img/bonus_star.png) Star: increase player speed, each next one increase max bullets count
+ - ![Bonus gun](resources/img/bonus_gun.png) Gun: same as three starts
+ - ![Bonus boat](resources/img/bonus_boat.png) Boat: allows to move on the water
+
 ### maps
 
 According to Tank 1990, the number of levels is 35. For convenience, maps are plain text files, which are located in `resources/level` directory.

@@ -13,8 +13,8 @@
 
 class Player : public Tank {
 public:
-    Player(int, double x, double y, PlayerData);
-    Player(int, SDL_Point, PlayerData);
+    Player(int, double x, double y);
+    Player(int, SDL_Point);
     ~Player();
 
     void try_update(int) override;
@@ -30,8 +30,10 @@ public:
 
     PlayerData* getdata();
 private:
-    PlayerData data_;
+    PlayerData *data_;
     bool is_stop_;
+
+    void init(int);
 };
 
 #endif // _DF_TANKWAR_PLAYER_H

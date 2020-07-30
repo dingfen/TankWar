@@ -14,7 +14,7 @@ class AppConfig {
     static const int max_enemy_nums;
     static const SDL_Point p1_start_point;
     static const SDL_Point p2_start_point;
-    static PlayerData init_player_data(int);
+    static void init_player_data();
     static SDL_Point enemy_start_point(int);
     static int current_level;
     static const int prepare_time;
@@ -27,9 +27,11 @@ class AppConfig {
     static const int shell_damage;
     static const int tank_hp;
     static const int eagle_hp;
-    static const int player_hp;
     static const int brick_hp;
     static const int stone_hp;
+
+    static PlayerData p1_data;
+    static PlayerData p2_data;
     
     // file data
     static std::string level_file_path(int);

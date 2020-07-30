@@ -24,7 +24,7 @@ void Menu::draw() {
 }
 
 void Menu::update(int dt) {
-    SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
+    // SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
 }
 
 void Menu::event(SDL_Event *e) {
@@ -62,14 +62,11 @@ void Menu::nextstate(std::unique_ptr<AppState>& app_state) {
     if (pos_y_ == ori_pos_y_) {
         // 1 Player
         AppConfig::player_nums = 1;
-        PlayerData pd1 = AppConfig::init_player_data(0);
-        app_state.reset(new Store(0, &pd1, nullptr));
+        app_state.reset(new Store(0));
     } else if (pos_y_ == ori_pos_y_ + line_spacing_) {
         // 2 Players
         AppConfig::player_nums = 2;
-        PlayerData pd1 = AppConfig::init_player_data(0);
-        PlayerData pd2 = AppConfig::init_player_data(1);
-        app_state.reset(new Store(0, &pd1, &pd2));
+        app_state.reset(new Store(0));
     } else if (pos_y_ == ori_pos_y_ + line_spacing_ * 2) {
         app_state.reset(new ConfigSheet());
     } else {

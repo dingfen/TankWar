@@ -12,27 +12,27 @@ inline SDL_Rect middle(int h = 32, int w = 32) {
     return p;
 }
 
-void Store::show_money(int i, SDL_Rect icon) {
+void Store::show_money(int i, SDL_Rect rbase) {
     Engine *e = Engine::getInstance();
     SDL_Rect player;
     std::string score;
     std::string life;
     if (i == 0) {
         player = e->getSprite(SpriteType::PLAYER_1);
-        score = std::to_string(pd1.score_) + " $ ";
-        life = "x "+ std::to_string(pd1.life_count_);
+        score = std::to_string(pd1->score_) + " $ ";
+        life = "x "+ std::to_string(pd1->life_count_);
     } else {
         player = e->getSprite(SpriteType::PLAYER_2);
-        score = std::to_string(pd2.score_) + " $ ";
-        life = "x " + std::to_string(pd2.life_count_);
+        score = std::to_string(pd2->score_) + " $ ";
+        life = "x " + std::to_string(pd2->life_count_);
     }
-    icon.y += i * 40;
-    e->draw(player, icon);
+    rbase.y += i * 40;
+    e->draw(player, rbase);
     SDL_Point p;
-    p.x = icon.x + 50;
-    p.y = icon.y + 10;
+    p.x = rbase.x + 50;
+    p.y = rbase.y + 10;
     e->writeText(p, life, SDL_Color{0xf0, 0xff, 0xf0, 0});
-    p.x = icon.x + 150;
+    p.x = rbase.x + 150;
     e->writeText(p, score, SDL_Color{0xff, 200, 0, 0});
 }
 
@@ -59,10 +59,15 @@ void Store::draw() {
             SDL_Color{0x00, 0xff, 0, 0});
     }
     // load goods_
-    for(int i = 0; i < goods_.size(); i++)
-        e->writeText(SDL_Point{60, cursor_pos_+i*line_spacing_}, goods_[i]);
+    for(int i = 0; i < goods_.size(); i++) {
+        e->writeText(SDL_Point{60, cursor_pos_+i*line_spacing_}, goods_[i].first,
+            {255, 255, 255, 0}, 14, 0);
+        string price = std::to_string(goods_[i].second) + " $";
+        e->writeText(SDL_Point{300, cursor_pos_+i*line_spacing_}, 
+            price, {255, 255, 255, 0}, 14, 0);
+    }
     // write tips
-    e->writeText(SDL_Point{30, 400}, "\'Space\' to Buy", 
+    e->writeText(SDL_Point{30, 400}, "Fire to Buy", 
         SDL_Color{0xff, 0xff, 0, 0}, 12);
     e->writeText(SDL_Point{300, 400}, "\'Enter\' -->", 
         SDL_Color{0xff, 0xff, 0, 0}, 12);
@@ -70,7 +75,7 @@ void Store::draw() {
 }
 
 void Store::update(int dt) {
-    SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
+    // SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
 }
 
 bool Store::finish() {
@@ -104,7 +109,11 @@ void Store::event(SDL_Event *e) {
             else
                 p2_offset_ = 0;
             break;
-        case SDLK_SPACE:
+        case SDLK_RCTRL:
+            buy(0);
+            break;
+        case SDLK_LCTRL:
+            buy(1);
             break;
         case SDLK_RETURN:
             is_finished_ = 1;
@@ -119,22 +128,22 @@ void Store::event(SDL_Event *e) {
 
 }
 
-Store::Store(int stage, const PlayerData *p1, const PlayerData *p2)
-    : goods_({"More Life * 1",
-    "Deep Damage * 1",
-    "More Shield time * 1",
-    "Less Enemy * 1"}),
-    is_finished_(0), stage_(stage) {
+void Store::init_goods() {
+    goods_.push_back(std::pair<string, int>("Life + 1", 1000));
+    goods_.push_back(std::pair<string, int>("Shell Damage + 1", 800));
+    goods_.push_back(std::pair<string, int>("HP + 10", 650));
+    goods_.push_back(std::pair<string, int>("Tank Speed + 30%", 650));
+}
+
+Store::Store(int stage)
+    : is_finished_(0), stage_(stage) {
+    init_goods();
     player_nums = AppConfig::player_nums;
     cursor_pos_ = 170;
     p1_offset_ = 0;
     p2_offset_ = 0;
-    if (p1) {
-        pd1 = *p1;
-    }
-    if (p2) {
-        pd2 = *p2;
-    }
+    pd1 = &AppConfig::p1_data;
+    pd2 = &AppConfig::p2_data;
 }
 
 Store::~Store() {
@@ -145,9 +154,10 @@ void Store::nextstate(std::unique_ptr<AppState>& app_state) {
     if (AppConfig::current_level > 35 || is_finished_ == 2) {
         app_state.reset(new Menu());
     } else {
-        if (player_nums > 1)
-            app_state.reset(new Game(AppConfig::current_level++, &pd1, &pd2));
-        else 
-            app_state.reset(new Game(AppConfig::current_level++, &pd1));
+        app_state.reset(new Game(AppConfig::current_level++));
     }
+}
+
+void Store::buy(int id) {
+
 }

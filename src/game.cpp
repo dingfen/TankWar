@@ -10,7 +10,7 @@
 #include <random>
 #include <fstream>
 
-void Game::init(const PlayerData *pd1, const PlayerData *pd2) {
+void Game::init() {
     is_finished_ = 0;
     prepare_time_ = AppConfig::prepare_time;
     over_time_ = AppConfig::game_ending_time;
@@ -24,12 +24,12 @@ void Game::init(const PlayerData *pd1, const PlayerData *pd2) {
     game_over_y_pos_ = AppConfig::window_rect.h;
 
     if (AppConfig::player_nums == 1) {
-        p1.reset(new Player(0, AppConfig::p1_start_point, *pd1));
+        p1.reset(new Player(0, AppConfig::p1_start_point));
         p2.reset();
         p2_over_ = true;
     } else if (AppConfig::player_nums == 2) {
-        p1.reset(new Player(0, AppConfig::p1_start_point, *pd1));
-        p2.reset(new Player(1, AppConfig::p2_start_point, *pd2));
+        p1.reset(new Player(0, AppConfig::p1_start_point));
+        p2.reset(new Player(1, AppConfig::p2_start_point));
     }
     for(int i = 0; i < AppConfig::max_enemy_nums; i++) {
         enemy_tanks_.push_back(nullptr);
@@ -37,9 +37,9 @@ void Game::init(const PlayerData *pd1, const PlayerData *pd2) {
     loadmap();
 }
 
-Game::Game(int stage, const PlayerData *pd1, const PlayerData *pd2)
+Game::Game(int stage)
     : stage_(stage) {
-    init(pd1, pd2);
+    init();
 }
 
 Game::~Game() {
@@ -142,11 +142,8 @@ void Game::nextstate(unique_ptr<AppState>& app_state) {
             app_state.reset(new Menu());
             break;
         case 3:
-            if (p2)
-                app_state.reset(new Store(stage_, p1->getdata(), p2->getdata()));
-            else 
-                app_state.reset(new Store(stage_, p1->getdata()));
-            break;
+        case 4:
+            app_state.reset(new Store(stage_));
             break;
     }
 }
@@ -272,7 +269,7 @@ void Game::drawstatus() {
     dstrect.w = 50;
     dstrect.h = 10;
     e->drawRect(dstrect, {0, 0, 0, 0});
-    dstrect.w = 50 * (pd->health_point_) / AppConfig::player_hp;
+    dstrect.w = 50 * (pd->health_point_) / pd->sum_hp_;
     e->drawRect(dstrect, {0, 255, 0, 0});
 
     // draw player info p2
@@ -289,7 +286,7 @@ void Game::drawstatus() {
         dstrect.w = 50;
         dstrect.h = 10;
         e->drawRect(dstrect, {0, 0, 0, 0});
-        dstrect.w = 50 * (pd2->health_point_) / AppConfig::player_hp;
+        dstrect.w = 50 * (pd2->health_point_) / pd2->sum_hp_;
         e->drawRect(dstrect, {0, 255, 0, 0});
     }
 }

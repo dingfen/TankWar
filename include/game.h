@@ -33,7 +33,7 @@ public:
     // jump to next state
     void nextstate(unique_ptr<AppState>&) override;
     
-    Game(int stage, const PlayerData *p1, const PlayerData *p2=nullptr);
+    Game(int stage);
     ~Game();
 private:
     // 0 game playing 1 game exit by escape 
@@ -63,7 +63,7 @@ private:
     //miscellaneous
     double game_over_y_pos_;
 
-    void init(const PlayerData *p1, const PlayerData *p2);
+    void init();
     void loadmap();
 
     // generate enemy tanks

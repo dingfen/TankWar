@@ -27,17 +27,17 @@ public:
     bool finish() override;
     // jump to next state
     void nextstate(std::unique_ptr<AppState>&) override;
-    Store(int,const PlayerData*, const PlayerData*p=nullptr);
+    Store(int);
     ~Store();
 
     static const int line_spacing_ = 32;
 private:
-    vector<string> goods_;
+    vector<std::pair<string, int>> goods_;
     int is_finished_;
     int stage_;
 
-    PlayerData pd1;
-    PlayerData pd2;
+    const PlayerData *pd1;
+    const PlayerData *pd2;
     int player_nums;
 
     int cursor_pos_;
@@ -46,6 +46,8 @@ private:
 
     void show_money(int i, SDL_Rect icon);
     void show_goods(SDL_Rect);
+    void init_goods();
+    void buy(int);
 };
 
 #endif // _DF_TANKWAR_STORE_H

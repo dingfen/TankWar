@@ -21,22 +21,14 @@ const int AppConfig::tank_hp = 20;
 const int AppConfig::eagle_hp = 10;
 const int AppConfig::brick_hp = 10;
 const int AppConfig::stone_hp = 100;
-const int AppConfig::player_hp = 30;
+PlayerData AppConfig::p1_data(0);
+PlayerData AppConfig::p2_data(1);
 
 SDL_Rect AppConfig::status_rect = {26*16, 0, 3*16, 26*16};
 SDL_Rect AppConfig::map_rect = {0, 0, 26*16, 26*16};
 SDL_Rect AppConfig::window_rect = {0, 0, 29*16, 26*16};
 SDL_Rect AppConfig::logo_rect = {20, 20, 406, 72};
 
-PlayerData AppConfig::init_player_data(int id) {
-    PlayerData pd;
-    pd.player_id_ = id;
-    pd.life_count_ = 5;
-    pd.health_point_ = AppConfig::player_hp;
-    pd.score_ = 0;
-    pd.goods_.clear();
-    return pd;
-}
 
 SDL_Point AppConfig::enemy_start_point(int i) {
     SDL_Point p{192*i, 0};

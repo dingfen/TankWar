@@ -29,7 +29,17 @@ struct PlayerData
     int score_;
     int life_count_;
     int health_point_;
+    int sum_hp_;
     vector<shared_ptr<Object>> goods_;
+
+    PlayerData(int id) {
+        player_id_ = id;
+        life_count_ = 5;
+        health_point_ = 30;
+        sum_hp_ = 30;
+        score_ = 0;
+        goods_.clear();
+    }
 };
 
 enum class Direction {

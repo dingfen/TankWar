@@ -1,13 +1,20 @@
 #include "player.h"
 
-Player::Player(int id, double x, double y, PlayerData pd)
-    : Tank(x, y, id ? SpriteType::PLAYER_2: SpriteType::PLAYER_1),
-    data_(pd) {
+void Player::init(int id) {
+    if (id)
+        data_ = &AppConfig::p2_data;
+    else 
+        data_ = &AppConfig::p1_data;
 }
 
-Player::Player(int id, SDL_Point point, PlayerData pd)
-    : Tank(point, id ? SpriteType::PLAYER_2: SpriteType::PLAYER_1),
-    data_(pd) {
+Player::Player(int id, double x, double y)
+    : Tank(x, y, id ? SpriteType::PLAYER_2: SpriteType::PLAYER_1) {
+    init(id);
+}
+
+Player::Player(int id, SDL_Point point)
+    : Tank(point, id ? SpriteType::PLAYER_2: SpriteType::PLAYER_1) {
+    init(id);
 }
 
 Player::~Player() {
@@ -15,21 +22,21 @@ Player::~Player() {
 }
 
 PlayerData* Player::getdata() {
-    return &data_;
+    return data_;
 }
 
 void Player::boom(int d) {
-    data_.health_point_ -= d;
-    if (data_.health_point_ <= 0) {
+    data_->health_point_ -= d;
+    if (data_->health_point_ <= 0) {
         is_boom_ = true;
-        data_.health_point_ = 0;
+        data_->health_point_ = 0;
     }
 }
 
 void Player::try_update(int dt) {
     const Uint8 *key_state = SDL_GetKeyboardState(NULL);
     is_stop_ = false;
-    if (data_.player_id_ == 0) {
+    if (data_->player_id_ == 0) {
         if (key_state[SDL_SCANCODE_UP]) {
             direction_ = Direction::UP;
         } else if (key_state[SDL_SCANCODE_DOWN]) {
@@ -101,15 +108,15 @@ void Player::do_update() {
 }
 
 void Player::addscore() {
-    data_.score_ += 100;
+    data_->score_ += 100;
 }
 
 bool Player::respawn() {
-    if (data_.life_count_ > 0)
-        data_.life_count_ --;
+    if (data_->life_count_ > 0)
+        data_->life_count_ --;
     else return true;
-    data_.health_point_ = AppConfig::player_hp;
-    if (data_.player_id_) {
+    data_->health_point_ = data_->sum_hp_;
+    if (data_->player_id_) {
         x_ = AppConfig::p2_start_point.x;
         y_ = AppConfig::p2_start_point.y;
         type_ = SpriteType::PLAYER_2;
