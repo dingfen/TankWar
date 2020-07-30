@@ -10,6 +10,7 @@
 #include "appstate.h"
 #include "object.h"
 #include "bush.h"
+#include "bonus.h"
 #include "player.h"
 #include "enemy.h"
 #include "eagle.h"
@@ -44,6 +45,7 @@ private:
     // game map without bush
     vector<vector<shared_ptr<Object>>> map_;
     vector<shared_ptr<Bush>> bush_;
+    vector<shared_ptr<Bonus>> bonus_;
     // prepare time at the beginning
     int prepare_time_;
     // prepare time when game over
@@ -76,9 +78,12 @@ private:
     // void try_update_status(int);
     // void do_update_status();
     void drawbush();    // bush must be last one drawn
+    void drawbonus();   // well, bonus must be last one in case to be hidden 
     void drawtank();
     void try_update_tank(int);
+    void try_update_bonus(int);
     void do_update_tank();
+    void do_update_bonus();
 
     // the top collision detect function
     void collision_detect();

@@ -64,6 +64,7 @@ void Game::draw() {
     drawtank();
     
     drawbush();
+    drawbonus();
 
     if (hq_destroyed_ || (p1_over_ && p2_over_)) {
         e->writeText(SDL_Point{-1, game_over_y_pos_}, "Game Over", SDL_Color{255, 10, 10, 255}, 24);
@@ -98,12 +99,14 @@ void Game::update(int dt) {
     }
     try_update_tank(dt);
     try_update_map(dt);
+    try_update_bonus(dt);
 
     boom_detect();
     collision_detect();
     
     do_update_map();
     do_update_tank();
+    do_update_bonus();
     SDL_UpdateWindowSurface(Engine::getInstance()->getWindow());
     }
 }
@@ -207,11 +210,25 @@ void Game::drawbush() {
     }
 }
 
+void Game::drawbonus() {
+    for(auto &pb : bonus_)
+        if(pb)
+            pb->draw();
+}
+
 void Game::try_update_map(int dt) {
     for(int i = 0; i < map_.size(); i++)
         for(int j = 0; j < map_[i].size(); j++) {
             if (map_[i][j])
                 map_[i][j]->try_update(dt);
+    }
+}
+
+void Game::try_update_bonus(int dt) {
+    for(auto &pb : bonus_) {
+        if (pb) {
+            pb->try_update(dt);
+        }
     }
 }
 
@@ -227,6 +244,19 @@ void Game::do_update_map() {
                     map_[i][j]->do_update();
                 }
             }
+    }
+}
+
+void Game::do_update_bonus() {
+    for(auto &pb : bonus_) {
+        if (pb) {
+            if (pb->is_destroy()) {
+                pb.reset();
+                pb = nullptr;
+            } else {
+                pb->do_update();
+            }
+        }
     }
 }
 
