@@ -9,8 +9,8 @@
 
 class Shell : public Object {
 public:
-    Shell(double x, double y, Direction);
-    Shell(SDL_Point, Direction);
+    Shell(double x, double y, Direction, int);
+    Shell(SDL_Point, Direction, int);
 
     ~Shell();
 
@@ -53,7 +53,7 @@ private:
     int flash_cycle_;   // see Water.h
     int texture_off_;   // see Water.h
 
-    void init();
+    void init(int l);
 };
 
 #endif // _DF_TANKWAR_SHELL_H

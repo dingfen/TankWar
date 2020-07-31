@@ -5,13 +5,14 @@ void Tank::init() {
     w_ = 32;
     h_ = 32;
     direction_ = Direction::UP;
-    speed_ = AppConfig::tank_speed;
+    
     is_blocked_ = false;
     is_destroyed_ = false;
     is_boom_ = false;
     is_coming_ = true;
-    health_point_ = AppConfig::tank_hp;
-    level_ = 0;
+    kind_ = 0;
+    setlevel(0);
+
     flash_cycle_ = 0;
     texture_off_ = 0;
     ori_point_ = {x_, y_};
@@ -74,7 +75,29 @@ bool Tank::is_coming() const {
     return is_coming_;
 }
 
-int Tank::getlevel() const {
+int Tank::getkind() const {
+    return kind_;
+}
+
+void Tank::setlevel(int l) {
+    level_ = l;
+    switch (level_) {
+    case 0:
+        speed_ = 0.08;
+        health_point_ = 20;
+        break;
+    case 1:
+        speed_ = 0.10;
+        health_point_ = 30;
+        break;
+    case 2:
+        speed_ = 0.12;
+        health_point_ = 40;
+        break;
+    }
+}
+
+int Tank::getlevel() {
     return level_;
 }
 
@@ -94,8 +117,9 @@ void Tank::draw() {
         e->draw(srcrect, SDL_Rect{x_, y_, w_, h_});
     } else {
         // normal condition
-        SDL_Rect srcrect = e->getSprite(type_, 0, level_);
+        SDL_Rect srcrect = e->getSprite(type_, 0, kind_);
         srcrect.x += (int)direction_;
+        srcrect.y += level_ * 64;
         e->draw(srcrect, SDL_Rect{x_, y_, w_, h_});
     }
     for(auto& ps : shells_) {
@@ -202,7 +226,7 @@ void Tank::fire() {
                     y = y_ + (h_ - 8)/2;
                     break;
             }
-            s.reset(new Shell(x, y, direction_));
+            s.reset(new Shell(x, y, direction_, level_));
             break;
         }
     }

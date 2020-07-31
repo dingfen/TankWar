@@ -377,8 +377,8 @@ shared_ptr<Enemy> Game::generatenemy() {
     int t = rand() % 4;
     SDL_Point pos = AppConfig::enemy_start_point(i);
     SpriteType type = (SpriteType)t;
-    int level = rand() % 5 -1;
-    shared_ptr<Enemy> pe(new Enemy(pos, type, level));
+    int kind = rand() % 5 -1;
+    shared_ptr<Enemy> pe(new Enemy(pos, type, kind));
 
     // check if there has enough space
     for(auto &other : enemy_tanks_) {
@@ -532,6 +532,7 @@ bool Game::tank_bonus_collision(Tank *t, Bonus *b) {
 }
 
 void Game::bonus_effect(Tank *t, Bonus *b) {
+    int l;
     switch (b->gettype())
     {
     case SpriteType::BONUS_BOAT:
@@ -547,6 +548,13 @@ void Game::bonus_effect(Tank *t, Bonus *b) {
     case SpriteType::BONUS_SHOVEL:
         break;
     case SpriteType::BONUS_STAR:
+        if (auto p = dynamic_cast<Player*>(t)) {
+            l = t->getlevel() +1;
+            t->setlevel(l);
+        } else {
+            l = t->getlevel() +1;
+            t->setlevel(l);
+        }
         break;
     case SpriteType::BONUS_TANK:
         if (dynamic_cast<Enemy*>(t)) {
@@ -642,7 +650,7 @@ void Game::shell_tank_boom(Tank *attacker, Tank *victim) {
                         enemy_on_map_--;
                         if (auto p = dynamic_cast<Player*>(attacker))
                             p->addscore();
-                        if (victim->getlevel() == -1) {
+                        if (victim->getkind() == -1) {
                             // enemy has bonus
                             generatebonus();
                         }

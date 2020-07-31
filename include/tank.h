@@ -35,7 +35,9 @@ public:
 
     void block();
     void nonblock();
-    int getlevel() const;
+    int getkind() const;
+    virtual void setlevel(int l);
+    int getlevel();
     std::vector<std::shared_ptr<Shell>>& shells();
 
     static const int boom_flicker = 70;
@@ -43,14 +45,17 @@ public:
 protected:
     Direction direction_;
     SDL_Point ori_point_;
-    double speed_;
-    int level_;
-    
+
+    // Tank status
+    double speed_;      
+    int kind_;          // the Tank A,B,C,D kind
+    int level_;         // the Tank level 0 1 2
+    int health_point_;
+
     bool is_destroyed_;
     bool is_boom_;
     bool is_blocked_;
     bool is_coming_;
-    int health_point_;
 
     int flash_cycle_;   // see Water.h
     int texture_off_;   // see Water.h

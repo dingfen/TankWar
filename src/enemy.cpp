@@ -1,21 +1,21 @@
 #include "enemy.h"
 #include <cstdlib>
 
-void Enemy::init(int level) {
+void Enemy::init(int kind) {
     srand(time(NULL));
     refire_time_ = rand() % 400 + 1000;
     moving_time_ = rand() % 400 + 1000;
-    level_ = level;
+    kind_ = kind;
 }
 
-Enemy::Enemy(double x, double y, SpriteType type, int level)
+Enemy::Enemy(double x, double y, SpriteType type, int kind)
     : Tank(x, y, type) {
-    init(level);
+    init(kind);
 }
 
-Enemy::Enemy(SDL_Point p, SpriteType type, int level)
+Enemy::Enemy(SDL_Point p, SpriteType type, int kind)
     : Tank(p, type) {
-    init(level);
+    init(kind);
 }
 
 Enemy::~Enemy() {

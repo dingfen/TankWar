@@ -1,9 +1,9 @@
 #include "shell.h"
 
-void Shell::init() {
+void Shell::init(int l) {
     w_ = 8;
     h_ = 8;
-    setlevel(0);
+    setlevel(l);
     ori_point_ = {x_, y_};
     is_destroyed_ = false;
     is_boom_ = false;
@@ -11,14 +11,14 @@ void Shell::init() {
     texture_off_ = 0;
 }
 
-Shell::Shell(double x, double y, Direction d)
+Shell::Shell(double x, double y, Direction d, int l)
     : Object(x, y, SpriteType::BULLET), direction_(d) {
-    init();
+    init(l);
 }
 
-Shell::Shell(SDL_Point p, Direction d)
+Shell::Shell(SDL_Point p, Direction d, int l)
     : Object(p, SpriteType::BULLET), direction_(d) {
-    init();
+    init(l);
 }
 
 Shell::~Shell() {

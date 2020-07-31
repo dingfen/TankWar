@@ -21,9 +21,7 @@ class AppConfig {
     static const int game_ending_time;
     static const int tile_h;
     static const int tile_w;
-    static const double tank_speed;
     static const int max_shell;
-    static const int tank_hp;
     static const int eagle_hp;
     static const int brick_hp;
     static const int stone_hp;
