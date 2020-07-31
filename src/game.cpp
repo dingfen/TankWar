@@ -141,6 +141,10 @@ void Game::nextstate(unique_ptr<AppState>& app_state) {
     switch (is_finished_) {
         case 1:
         case 2:
+            // clean the player data
+            p1->cleandata();
+            if (p2) 
+                p2->cleandata();
             AppConfig::current_level = 1;
             app_state.reset(new Menu());
             break;

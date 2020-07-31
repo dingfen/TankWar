@@ -30,10 +30,21 @@ PlayerData* Player::getdata() {
     return data_;
 }
 
+void Player::cleandata() {
+    data_->life_count_ = 5;
+    data_->max_shell_ = 4;
+    data_->player_speed_ = 0.08;
+    data_->health_point_ = 30;
+    data_->sum_hp_ = 30;
+    data_->score_ = 0;
+    data_->goods_.clear();
+}
+
 void Player::boom(int d) {
     data_->health_point_ -= d;
     if (data_->health_point_ <= 0) {
         is_boom_ = true;
+        // special skill or bonus must be clear
         data_->health_point_ = 0;
     }
 }

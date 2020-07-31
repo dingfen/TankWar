@@ -81,6 +81,8 @@ According to Tank 1990 and [krystiankaluzny/Tanks](https://github.com/krystianka
 
 In coming ...
 
+The goods or bonus players buy in Store are always kept during the game.
+
  - ![Bonus grenade](resources/img/bonus_grenade.png) Grenade: all enemies are destroyed
  - ![Bonus helmet](resources/img/bonus_helmet.png) Helmet: active player shield for 10 seconds
  - ![Bonus clock](resources/img/bonus_clock.png) Clock: freeze all enemies for 8 seconds

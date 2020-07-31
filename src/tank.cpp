@@ -15,6 +15,7 @@ void Tank::init() {
     flash_cycle_ = 0;
     texture_off_ = 0;
     ori_point_ = {x_, y_};
+    shells_.clear();
     for(int i = 0; i < AppConfig::max_shell; i++)
         shells_.push_back(nullptr);
 }

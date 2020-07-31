@@ -29,6 +29,7 @@ public:
     void boom(int) override;
 
     PlayerData* getdata();
+    void cleandata();
 private:
     PlayerData *data_;
     bool is_stop_;
