@@ -73,6 +73,10 @@ bool Tank::is_coming() const {
     return is_coming_;
 }
 
+int Tank::getlevel() const {
+    return level_;
+}
+
 void Tank::draw() {
     Engine *e = Engine::getInstance();
     SDL_Rect srcrect;

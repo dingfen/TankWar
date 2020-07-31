@@ -47,3 +47,7 @@ void Bonus::try_update(int dt) {
         }
     }
 }
+
+SpriteType Bonus::gettype() {
+    return type_;
+}

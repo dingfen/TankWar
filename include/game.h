@@ -70,6 +70,8 @@ private:
 
     // generate enemy tanks
     shared_ptr<Enemy> generatenemy();
+    // generate bonus put it in bonus_
+    void generatebonus();
 
     void drawmap();
     void try_update_map(int);
@@ -91,6 +93,9 @@ private:
     bool tank_map_collision(const Tank *);
     // collision with tanks
     bool tank_tank_collision(const Tank *,const Tank *);
+    // collision with bonus
+    bool tank_bonus_collision(Tank *, Bonus *);
+    void bonus_effect(Tank *, Bonus *);
 
     // the top booming detect function
     void boom_detect();

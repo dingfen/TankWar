@@ -395,6 +395,23 @@ shared_ptr<Enemy> Game::generatenemy() {
     return pe;
 }
 
+void Game::generatebonus() {
+    SpriteType type = (SpriteType)(rand() % 8 + (int)SpriteType::BONUS_BOAT);
+    SDL_Rect br, er;
+    bool col;
+    br.h = 32; br.w = 32;
+    er = map_[0].back()->getRect();
+    // avoid collision with headquaters
+    do
+    {
+        br.x = rand() % (AppConfig::map_rect.x + AppConfig::map_rect.w - AppConfig::tile_w);
+        br.y = rand() % (AppConfig::map_rect.y + AppConfig::map_rect.h - AppConfig::tile_h);
+        col = SDL_HasIntersection(&br, &er);
+    } while (col);
+
+    bonus_.push_back(shared_ptr<Bonus>(new Bonus(br.x, br.y, type)));
+}
+
 void Game::collision_detect() {
     vector<bool> p1_blocks(AppConfig::max_enemy_nums, false);
     vector<bool> p2_blocks(AppConfig::max_enemy_nums, false);
@@ -449,6 +466,16 @@ void Game::collision_detect() {
         else 
             enemy_tanks_[i]->block();
     }
+
+    // all tanks can hit the bonus
+    for(auto &pb : bonus_) {
+        tank_bonus_collision(p1.get(), pb.get());
+        if (p2)
+            tank_bonus_collision(p2.get(), pb.get());
+        for(int i = 0; i < AppConfig::max_enemy_nums; i++) {
+            tank_bonus_collision(enemy_tanks_[i].get(), pb.get());
+        }
+    }
 }
 
 bool Game::tank_map_collision(const Tank *p) {
@@ -483,6 +510,50 @@ bool Game::tank_tank_collision(const Tank *pt1, const Tank *pt2) {
         return true;
     }
     else return false;
+}
+
+bool Game::tank_bonus_collision(Tank *t, Bonus *b) {
+    if (!t || !b)
+        return false;
+    if (t->is_boom())
+        return false;
+    SDL_Rect tr = t->getRect();
+    SDL_Rect br = b->getRect();
+    if (SDL_HasIntersection(&tr, &br)) {
+        bonus_effect(t, b);
+        b->destroy();
+        return true;
+    }
+    else return false;
+}
+
+void Game::bonus_effect(Tank *t, Bonus *b) {
+    switch (b->gettype())
+    {
+    case SpriteType::BONUS_BOAT:
+        break;
+    case SpriteType::BONUS_CLOCK:
+        break;
+    case SpriteType::BONUS_GRENADE:
+        break;
+    case SpriteType::BONUS_GUN:
+        break;
+    case SpriteType::BONUS_HELMET:
+        break;
+    case SpriteType::BONUS_SHOVEL:
+        break;
+    case SpriteType::BONUS_STAR:
+        break;
+    case SpriteType::BONUS_TANK:
+        if (dynamic_cast<Enemy*>(t)) {
+            enemy_num_++;
+        } else if (auto p = dynamic_cast<Player*>(t)){
+            auto data = p->getdata();
+            data->life_count_++;
+            data->health_point_ = data->sum_hp_;
+        }
+        break;
+    }
 }
 
 void Game::boom_detect() {
@@ -567,6 +638,10 @@ void Game::shell_tank_boom(Tank *attacker, Tank *victim) {
                         enemy_on_map_--;
                         if (auto p = dynamic_cast<Player*>(attacker))
                             p->addscore();
+                        if (victim->getlevel() == -1) {
+                            // enemy has bonus
+                            generatebonus();
+                        }
                     }
                 }
             }

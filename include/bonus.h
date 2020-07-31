@@ -20,6 +20,7 @@ public:
     void try_update(int) override;
     bool is_destroy() override;
     void destroy();
+    SpriteType gettype();
 private:
     bool is_destroyed_;
     bool is_display_;

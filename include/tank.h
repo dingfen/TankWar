@@ -35,6 +35,7 @@ public:
 
     void block();
     void nonblock();
+    int getlevel() const;
     std::vector<std::shared_ptr<Shell>>& shells();
 
     static const int boom_flicker = 70;
