@@ -92,7 +92,7 @@ void Game::update(int dt) {
     if(hq_destroyed_ || (p1_over_ && p2_over_)) {
         if (over_time_ > 0) {
             over_time_ -= dt;
-            game_over_y_pos_ -= dt * AppConfig::shell_speed;
+            game_over_y_pos_ -= dt * 0.20;
         }
         else
             is_finished_ = 2;
@@ -604,7 +604,7 @@ void Game::shell_map_boom(Tank *t) {
                             SDL_Rect objrect = obj->getRect();
                             if (SDL_HasIntersection(&sherect, &objrect)) {
                                 s->boom();
-                                p->boom(s->damage());
+                                p->boom(s.get());
                             }
                         }
                         else if(auto p = std::dynamic_pointer_cast<Eagle>(obj)) {

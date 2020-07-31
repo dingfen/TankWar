@@ -7,6 +7,8 @@
 
 #include "object.h"
 
+class Shell;
+
 class Stone : public Object {
 public:
     Stone(double x, double y);
@@ -19,7 +21,7 @@ public:
     // void update(int) override;
     
     bool is_destroy() override;
-    void boom(int);
+    void boom(Shell *);
 private:
     bool is_destroyed_;
     int health_point_;

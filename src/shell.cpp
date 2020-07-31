@@ -3,8 +3,7 @@
 void Shell::init() {
     w_ = 8;
     h_ = 8;
-    speed_ = AppConfig::shell_speed;
-    damage_ = AppConfig::shell_damage;
+    setlevel(0);
     ori_point_ = {x_, y_};
     is_destroyed_ = false;
     is_boom_ = false;
@@ -26,8 +25,38 @@ Shell::~Shell() {
     
 }
 
+int Shell::getlevel() {
+    return level_;
+}
+
+void Shell::setlevel(int l) {
+    level_ = l;
+    switch (level_) {
+    case 0:
+        damage_ = 20;
+        speed_ = 0.20;
+        break;
+    case 1:
+        damage_ = 25;
+        speed_ = 0.25;
+        break;
+    case 2:
+        damage_ = 30;
+        speed_ = 0.30;
+        break;
+    }
+}
+
+void Shell::setdamage(int d) {
+    damage_ = d;
+}
+
 int Shell::damage() {
     return damage_;
+}
+
+void Shell::setspeed(int s) {
+    speed_ = s;
 }
 
 Direction Shell::getdirection() {

@@ -22,9 +22,7 @@ class AppConfig {
     static const int tile_h;
     static const int tile_w;
     static const double tank_speed;
-    static const double shell_speed;
     static const int max_shell;
-    static const int shell_damage;
     static const int tank_hp;
     static const int eagle_hp;
     static const int brick_hp;

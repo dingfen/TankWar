@@ -52,6 +52,7 @@ void Brick::boom(Shell *s) {
     health_point_ -= s->damage();
     if (health_point_ <= 0) {
         health_point_ = 0;
+        if (s->getlevel() < 1) {
         switch(texture_off_) {
             case 0:
                 switch (s->getdirection()) {
@@ -101,6 +102,9 @@ void Brick::boom(Shell *s) {
             case 8:
                 is_destroyed_ = true;
                 break;
+        }
+        } else {
+            is_destroyed_ = true;
         }
     }
 }

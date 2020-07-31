@@ -1,4 +1,5 @@
 #include "stone.h"
+#include "shell.h"
 
 Stone::Stone(double x, double y)
     : Object(x, y, SpriteType::STONE_WALL),
@@ -14,8 +15,10 @@ Stone::~Stone() {
     
 }
 
-void Stone::boom(int d) {
-    health_point_ -= d;
+void Stone::boom(Shell *s) {
+    if (s->getlevel() < 1)
+        return ;
+    health_point_ -= s->damage();
     if (health_point_ <= 0) {
         is_destroyed_ = true;
         health_point_ = 0;
