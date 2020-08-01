@@ -38,7 +38,7 @@ std::string AppConfig::texture_path() {
 
 std::string AppConfig::font_path(int index) {
     static std::vector<std::string> font{"resources/font/prstartk.ttf",
-        "resources/font/arialbd.ttf", "resources/font/tank_font.ttk"};
+        "resources/font/arialbd.ttf", "resources/font/tank_font.ttf"};
     return font.at(index);
 }
 

@@ -38,8 +38,8 @@ public:
     void clear();
     void draw(const SDL_Rect& srcrect, const SDL_Rect& dstrect);
     void writeText(SDL_Point, const std::string & text, 
-        SDL_Color color = {0xff, 0xff, 0xff, 0}, int fontsize = 14, int fontfamily = 0);
-    void drawRect(const SDL_Rect& srcrect, SDL_Color color= {0xff, 0xff, 0xff, 0},
+        const SDL_Color& color = {0xff, 0xff, 0xff, 0}, int fontsize = 14, int fontfamily = 0);
+    void drawRect(const SDL_Rect& srcrect, const SDL_Color& color= {0xff, 0xff, 0xff, 0},
         bool is_fill = true);
 private:
     Engine();

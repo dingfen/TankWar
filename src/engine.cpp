@@ -53,7 +53,7 @@ void Engine::draw(const SDL_Rect& srcrect, const SDL_Rect& dstrect) {
 }
 
 void Engine::writeText(SDL_Point point, const std::string & text, 
-    SDL_Color color, int fontsize, int fontfamily) {
+    const SDL_Color &color, int fontsize, int fontfamily) {
     try {
         painter_->writeText(point, text, color, fontsize, fontfamily);
     } catch(const std::exception &e) {
@@ -61,7 +61,7 @@ void Engine::writeText(SDL_Point point, const std::string & text,
     }
 }
 
-void Engine::drawRect(const SDL_Rect& srcrect, SDL_Color color, bool is_fill) {
+void Engine::drawRect(const SDL_Rect& srcrect, const SDL_Color& color, bool is_fill) {
     try {
         painter_->drawRect(srcrect, color, is_fill);
     } catch(std::exception &e) {

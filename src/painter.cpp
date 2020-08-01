@@ -25,6 +25,10 @@ Painter::~Painter() {
         SDL_DestroyRenderer(render_);
         render_ = nullptr;
     }
+    if (ttf_text_) {
+        SDL_DestroyTexture(ttf_text_);
+        ttf_text_ = nullptr;
+    }
     if (font_) {
         TTF_CloseFont(font_);
         font_ = nullptr;
