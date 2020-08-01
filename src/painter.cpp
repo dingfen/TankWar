@@ -81,6 +81,10 @@ void Painter::writeText(SDL_Point point, const std::string & text,
     SDL_Surface *suf = TTF_RenderText_Solid(font_, text.c_str(), color);
     if (!suf)
         throw TTFErrorException();
+    if (ttf_text_) {
+        SDL_DestroyTexture(ttf_text_);
+        ttf_text_ = nullptr;
+    }
     ttf_text_ = SDL_CreateTextureFromSurface(render_, suf);
     if (!ttf_text_)
         throw SDLErrorException();
