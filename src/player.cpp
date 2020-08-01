@@ -61,7 +61,6 @@ void Player::cleandata() {
     data_->level_ = 0;
     data_->sum_hp_ = 30;
     data_->score_ = 0;
-    data_->goods_.clear();
 }
 
 void Player::boom(int d) {

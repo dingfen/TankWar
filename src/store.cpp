@@ -149,10 +149,10 @@ void Store::event(SDL_Event *e) {
 }
 
 void Store::init_goods() {
-    goods_.push_back(std::pair<string, int>("Life + 1", 1000));
-    goods_.push_back(std::pair<string, int>("Shell Damage + 1", 800));
-    goods_.push_back(std::pair<string, int>("HP + 10", 650));
-    goods_.push_back(std::pair<string, int>("Tank Speed + 30%", 650));
+    goods_.push_back(std::pair<string, int>("Life + 1", 2000));
+    goods_.push_back(std::pair<string, int>("Shell Damage + 5", 1800));
+    goods_.push_back(std::pair<string, int>("HP + 10", 1850));
+    goods_.push_back(std::pair<string, int>("Tank Speed + 5%", 1650));
 }
 
 Store::Store(int stage)

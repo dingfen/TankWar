@@ -540,6 +540,21 @@ void Game::bonus_effect(Tank *t, Bonus *b) {
     case SpriteType::BONUS_CLOCK:
         break;
     case SpriteType::BONUS_GRENADE:
+        if (dynamic_cast<Player*>(t)) {
+            for(auto & pt : enemy_tanks_) {
+                if (pt) {
+                    pt->boom(200);
+                    enemy_num_--;
+                    enemy_on_map_--;
+                    p1->addscore();
+                    if (p2)
+                        p2->addscore();
+                }
+            }
+        } else {
+            p1->boom(200);
+            if (p2) p2->boom(200);
+        }
         break;
     case SpriteType::BONUS_GUN:
         break;

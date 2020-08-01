@@ -33,7 +33,6 @@ struct PlayerData
     int life_count_;
     int health_point_;
     int sum_hp_;
-    vector<shared_ptr<Object>> goods_;
 
     PlayerData(int id) {
         player_id_ = id;
@@ -44,7 +43,6 @@ struct PlayerData
         health_point_ = 30;
         sum_hp_ = 30;
         score_ = 0;
-        goods_.clear();
     }
 };
 
