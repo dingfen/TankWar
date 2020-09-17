@@ -30,9 +30,14 @@ PlayerData* Player::getdata() {
     return data_;
 }
 
-void Player::setlevel(int l) {
-    level_ = l;
-    data_->level_ = l;
+void Player::settanklevel(int l) {
+    if (l > 2) 
+        l = 2;
+    else if (l < 0) {
+        l = 0;
+    }
+    tank_level_ = l;
+    data_->tank_level_ = l;
     switch (l)
     {
     case 0:
@@ -53,12 +58,23 @@ void Player::setlevel(int l) {
     }
 }
 
+void Player::setshellevel(int l) {
+    if (l > 2) 
+        l = 2;
+    else if (l < 0) {
+        l = 0;
+    }
+    shell_level_ = l;
+    data_->shell_level_ = l;
+}
+
 void Player::cleandata() {
     data_->life_count_ = 5;
     data_->max_shell_ = 4;
     data_->player_speed_ = 0.08;
     data_->health_point_ = 30;
-    data_->level_ = 0;
+    data_->tank_level_ = 0;
+    data_->shell_level_ = 0;
     data_->sum_hp_ = 30;
     data_->score_ = 0;
 }

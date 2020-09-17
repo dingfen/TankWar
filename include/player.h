@@ -28,7 +28,8 @@ public:
 
     void boom(int) override;
 
-    void setlevel(int) override;
+    void settanklevel(int) override;
+    void setshellevel(int) override;
     PlayerData* getdata();
     void cleandata();
 private:

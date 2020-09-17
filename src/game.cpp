@@ -557,19 +557,16 @@ void Game::bonus_effect(Tank *t, Bonus *b) {
         }
         break;
     case SpriteType::BONUS_GUN:
+        l = t->getshellevel() +1;
+        t->setshellevel(l);
         break;
     case SpriteType::BONUS_HELMET:
         break;
     case SpriteType::BONUS_SHOVEL:
         break;
     case SpriteType::BONUS_STAR:
-        if (auto p = dynamic_cast<Player*>(t)) {
-            l = t->getlevel() +1;
-            t->setlevel(l);
-        } else {
-            l = t->getlevel() +1;
-            t->setlevel(l);
-        }
+        l = t->getlevel() +1;
+        t->settanklevel(l);
         break;
     case SpriteType::BONUS_TANK:
         if (dynamic_cast<Enemy*>(t)) {

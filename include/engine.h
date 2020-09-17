@@ -24,13 +24,7 @@ public:
         return painter_;
     }
 
-    SDL_Rect getSprite(SpriteType type, int off = 0, int kind = 0) {
-        SDL_Rect ret = sc_->get(type).rect;
-        ret.y += off * ret.h;
-        // only for tank
-        ret.x += kind * 128;
-        return ret;
-    }
+    SDL_Rect getSprite(SpriteType type, int off = 0, int kind = 0);
 
     void update();
 

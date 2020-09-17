@@ -68,3 +68,11 @@ void Engine::drawRect(const SDL_Rect& srcrect, const SDL_Color& color, bool is_f
         std::cerr << e.what() << std::endl;
     }
 }
+
+SDL_Rect Engine::getSprite(SpriteType type, int off, int kind) {
+    SDL_Rect ret = sc_->get(type).rect;
+    ret.y += off * ret.h;
+    // only for tank
+    ret.x += kind * 128;
+    return ret;
+}

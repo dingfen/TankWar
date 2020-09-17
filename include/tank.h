@@ -36,8 +36,10 @@ public:
     void block();
     void nonblock();
     int getkind() const;
-    virtual void setlevel(int l);
+    virtual void settanklevel(int l);
+    virtual void setshellevel(int l);
     int getlevel();
+    int getshellevel();
     std::vector<std::shared_ptr<Shell>>& shells();
 
     static const int boom_flicker = 70;
@@ -48,8 +50,9 @@ protected:
 
     // Tank status
     double speed_;      
-    int kind_;          // the Tank A,B,C,D kind
-    int level_;         // the Tank level 0 1 2
+    int kind_;              // the Tank A,B,C,D kind
+    int tank_level_;         // the Tank level 0 1 2
+    int shell_level_;
     int health_point_;
 
     bool is_destroyed_;
