@@ -9,7 +9,8 @@ void Player::init(int id) {
     for(int i = 0; i < data_->max_shell_; i++) {
         shells_.push_back(nullptr);
     }
-    speed_ = data_->player_speed_;
+    settanklevel(data_->tank_level_);
+    setshellevel(data_->shell_level_);
 }
 
 Player::Player(int id, double x, double y)
@@ -181,5 +182,6 @@ bool Player::respawn() {
         type_ = SpriteType::PLAYER_1;
     }
     Tank::init();
+    this->init(data_->player_id_);
     return false;
 }

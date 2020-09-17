@@ -50,7 +50,7 @@ protected:
 
     // Tank status
     double speed_;      
-    int kind_;              // the Tank A,B,C,D kind
+    int kind_;              // the Tank's HP kind
     int tank_level_;         // the Tank level 0 1 2
     int shell_level_;
     int health_point_;

@@ -11,8 +11,6 @@ void Tank::init() {
     is_boom_ = false;
     is_coming_ = true;
     kind_ = 0;
-    settanklevel(0);
-    setshellevel(0);
 
     flash_cycle_ = 0;
     texture_off_ = 0;

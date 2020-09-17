@@ -19,11 +19,16 @@ public:
 
     // void do_update() override;
 
+    void boom(int d) override;
+
     // count time to fire
     void fire(int);
+    void setkind(int);
+
 private:
     int refire_time_;
     int moving_time_;
+    int sum_hp_;
     void init(int);
 };
 
