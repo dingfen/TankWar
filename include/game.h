@@ -96,6 +96,7 @@ private:
     // collision with bonus
     bool tank_bonus_collision(Tank *, Bonus *);
     void bonus_effect(Tank *, Bonus *);
+    void enemy_target();
 
     // the top booming detect function
     void boom_detect();

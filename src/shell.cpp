@@ -37,11 +37,11 @@ void Shell::setlevel(int l) {
         speed_ = 0.20;
         break;
     case 1:
-        damage_ = 25;
+        damage_ = 30;
         speed_ = 0.25;
         break;
     case 2:
-        damage_ = 30;
+        damage_ = 40;
         speed_ = 0.30;
         break;
     }

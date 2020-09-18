@@ -24,12 +24,17 @@ public:
     // count time to fire
     void fire(int);
     void setkind(int);
+    void setarget(SDL_Point p1, SDL_Point p2, SDL_Point pe);
 
+    static const int refire = 800;
 private:
-    int refire_time_;
+    int refire_time_;       // enemy tank fire at constant time
     int moving_time_;
     int sum_hp_;
+    SDL_Point target;
+
     void init(int);
+    Direction route();
 };
 
 #endif // _DF_TANKWAR_ENEMY_H

@@ -103,6 +103,7 @@ void Game::update(int dt) {
 
     boom_detect();
     collision_detect();
+    enemy_target();
     
     do_update_map();
     do_update_tank();
@@ -371,6 +372,32 @@ void Game::do_update_tank() {
     }
 }
 
+int difficulty(int stage) {
+    srand(time(NULL));
+    double a, b, c;
+    if(stage <= 17) {
+        a = -0.040625 * stage + 0.940625;
+        b = -0.028125 * stage + 0.978125;
+        c = -0.014375 * stage + 0.994375;
+    } else {
+        a = -0.012778 * stage + 0.467222;
+        b = -0.025000 * stage + 0.925000;
+        c = -0.036111 * stage + 1.363889;
+    }
+    double p = static_cast<double>(rand()) / RAND_MAX;
+    int bonus = rand() % 5;
+    if (!bonus) 
+        return -1;
+    if(p < a) 
+        return 0;
+    else if(p < b) 
+        return 1;
+    else if(p < c) 
+        return 2;
+    else 
+        return 3;
+}
+
 shared_ptr<Enemy> Game::generatenemy() {
     srand(time(NULL));
     int i = rand() % 3;
@@ -378,7 +405,7 @@ shared_ptr<Enemy> Game::generatenemy() {
     SDL_Point pos = AppConfig::enemy_start_point(i);
     SpriteType type = (SpriteType)t;
     // degree of difficulty
-    int kind = rand() % 5 -1;
+    int kind = difficulty(stage_);
     shared_ptr<Enemy> pe(new Enemy(pos, type, kind));
 
     // check if there has enough space
@@ -690,5 +717,24 @@ void Game::shell_shell_boom(Tank *us, Tank *en) {
                 }
             }
         }
+    }
+}
+
+void Game::enemy_target() {
+    SDL_Point pt1, pt2, pte;
+    pt1.x = p1->getX();
+    pt1.y = p1->getY();
+    pte.x = 12*16;
+    pte.y = 24*16;
+    if (p2) {
+        pt2.x = p2->getX();
+        pt2.y = p2->getY();
+    } else {
+        pt2.x = -1;
+        pt2.y = -1;
+    }
+    for(auto &e : enemy_tanks_) {
+        if (e)
+            e->setarget(pt1, pt2, pte);
     }
 }
