@@ -377,6 +377,7 @@ shared_ptr<Enemy> Game::generatenemy() {
     int t = rand() % 4;
     SDL_Point pos = AppConfig::enemy_start_point(i);
     SpriteType type = (SpriteType)t;
+    // degree of difficulty
     int kind = rand() % 5 -1;
     shared_ptr<Enemy> pe(new Enemy(pos, type, kind));
 

@@ -6,7 +6,7 @@ OBJ_NAME = main
 
 C11FLAG = -std=c++11 -O -I include/
 SDLLIB=-lSDL2 -lSDL2_image -lSDL2_ttf
-Debug=-g -fno-inline
+Debug=-D DEBUG
 
 #This is the target that compiles our executable
 all : $(SRCS)

@@ -3,6 +3,10 @@
 #include "store.h"
 #include "engine.h"
 
+#ifdef DEBUG
+#include "debugscene.h"
+#endif
+
 App::App()
     : is_running_(false) {}
 
@@ -27,6 +31,7 @@ void App::run() {
     try {
         init();
         // load Menu
+        #ifndef DEBUG
         app_state_ = unique_ptr<AppState>(new Menu());
         app_state_->draw();
         app_state_->update(0);
@@ -65,6 +70,31 @@ void App::run() {
             //     loop_count = 0;
             // }
         }
+            #else
+            app_state_ = unique_ptr<AppState>(new DebugScene());
+            app_state_->draw();
+            app_state_->update(0);
+
+            is_running_ = true;
+            int time1, time2, duration;
+            time1 = SDL_GetTicks();
+            while(is_running_) {
+                time2 = SDL_GetTicks();
+                duration = time2 - time1;
+
+                this->event();
+
+                if (app_state_->finish()) {
+                    app_state_->nextstate(app_state_);
+                } else {
+                    app_state_->draw();
+                    app_state_->update(duration);
+                }
+                if (!app_state_) break;
+
+                SDL_Delay(15);
+            }
+            #endif
     } catch(const std::exception &e) {
         cerr << e.what() << endl;
         SDL_ClearError();
