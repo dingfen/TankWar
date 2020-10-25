@@ -178,6 +178,7 @@ void Store::nextstate(std::unique_ptr<AppState>& app_state) {
         app_state.reset(new Menu());
     } else {
         app_state.reset(new Game(AppConfig::current_level++));
+        
     }
 }
 
